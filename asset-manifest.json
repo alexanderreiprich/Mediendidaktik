@@ -1,0 +1,13 @@
+{
+  "files": {
+    "main.css": "/Mediendidaktik/static/css/main.f944fd72.css",
+    "main.js": "/Mediendidaktik/static/js/main.0654cfa9.js",
+    "index.html": "/Mediendidaktik/index.html",
+    "main.f944fd72.css.map": "/Mediendidaktik/static/css/main.f944fd72.css.map",
+    "main.0654cfa9.js.map": "/Mediendidaktik/static/js/main.0654cfa9.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.f944fd72.css",
+    "static/js/main.0654cfa9.js"
+  ]
+}
