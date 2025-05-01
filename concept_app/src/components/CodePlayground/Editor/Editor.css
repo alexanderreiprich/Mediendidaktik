@@ -1,0 +1,53 @@
+.editor-pane {
+  width: 80%;
+}
+
+.editor-tabs {
+  background-color: #555;
+  color: white;
+  padding: 8px;
+  display: flex;
+}
+
+.editor-tab {
+  padding: 8px 16px;
+  margin-right: 8px;
+  cursor: pointer;
+  background-color: #555;
+  color: white;
+  border: none;
+  border-radius: 4px 4px 0 0;
+}
+
+.editor-tab.active {
+  background-color: #4285f4;
+}
+
+.editor-content {
+  height: 100%;
+}
+
+.code-editor {
+  width: 100%;
+  height: 100%;
+  padding: 16px;
+  font-family: 'Courier New', Courier, monospace;
+  background-color: #222;
+  color: #f1f1f1;
+  resize: none;
+  border: none;
+  outline: none;
+  flex: 1;
+}
+
+.html-editor {
+  color: #f1f1f1;
+}
+
+.css-editor {
+  color: #f1f1f1;
+}
+
+.js-editor {
+  color: #f1f1f1;
+}
