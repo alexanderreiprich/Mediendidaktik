@@ -1,15 +1,16 @@
 import React from 'react';
+import CodeMirror from '@uiw/react-codemirror';
+import { javascript } from '@codemirror/lang-javascript';
 
 const JsEditor = ({ code, onChange }) => {
-  const handleChange = (e) => {
-    onChange(e.target.value);
-  };
-
   return (
-    <textarea
-      className="code-editor js-editor"
+    <CodeMirror
       value={code}
-      onChange={handleChange}
+      height="200px"
+      extensions={[javascript()]}
+      onChange={(value) => onChange(value)}
+      theme="dark"
+      className="code-editor js-editor"
       placeholder="Gib hier JavaScript-Code ein"
     />
   );
