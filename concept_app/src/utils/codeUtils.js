@@ -1,4 +1,3 @@
-
 // Combines code to complete html doc 
 export const combineCode = (html, css, js) => {
   return `
@@ -43,3 +42,12 @@ export const extractJs = (combinedCode) => {
   }
   return '';
 };
+
+export const extractCode = (htmlContent) => {
+  // extracts and segments code from an html file
+  return {
+    html: extractHtml(htmlContent),
+    css: extractCss(htmlContent),
+    js: extractJs(htmlContent)
+  };
+}; 

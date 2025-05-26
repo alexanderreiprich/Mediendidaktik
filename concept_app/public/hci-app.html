@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="de">
+
+<head>
+    <meta charset="UTF-8" />
+    <title>Smart Clean Dashboard</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+    <style>
+        :root {
+            --primaryColor: #fdf0c6;
+            --fontColor: #4a3f1c;
+            --fontHoverColor: #000000;
+            --borderColor: #e0d8b0;
+            --cardPadding: 3rem;
+            --internalCardPadding: 3rem;
+            --disabledColor: #eee;
+            --disabledSecondaryColor: #aaa;
+        }
+
+        body {
+            font-family: "Times New Roman", serif;
+            background-color: var(--primaryColor);
+            margin: 0;
+            display: flex;
+        }
+
+        .sidebar {
+            width: 200px;
+            padding: var(--internalCardPadding);
+            border-right: 1px solid var(--borderColor);
+        }
+
+        .sidebar ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        .sidebar li {
+            margin-bottom: var(--cardPadding);
+            font-weight: bold;
+            color: var(--fontColor);
+
+            :hover {
+                color: var(--fontHoverColor);
+            }
+        }
+
+
+        .main {
+            flex: 1;
+            padding: var(--cardPadding);
+            color: var(--fontColor);
+        }
+
+        h2 {
+            font-size: 22px;
+        }
+
+        .plan-section,
+        .room-section,
+        .device-section {
+            margin-top: var(--cardPadding);
+        }
+
+        .more-info {
+            color: var(--fontColor);
+            text-decoration: none;
+        }
+
+        .device-container {
+            width: 100%;
+        }
+
+        .device {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            width: 100%;
+            margin: 6px 0;
+            padding: 6px;
+            background-color: var(--primaryColor);
+            border-radius: 6px;
+        }
+
+        .device-name,
+        .device-actions {
+            width: 25%;
+        }
+
+        .device-more,
+        .device-battery {
+            width: 25%;
+            display: flex;
+            justify-content: end;
+            pointer-events: all;
+            a {
+                color: var(--fontColor);
+                text-decoration: none;
+            }
+        }
+
+
+        .disabled {
+            color: var(--disabledSecondaryColor);
+            pointer-events: none;
+        }
+
+        .device span {
+            margin: 0 5px;
+        }
+
+        .toggle-btn {
+            padding: 4px 10px;
+            cursor: pointer;
+            border: 1px solid var(--disabledSecondaryColor);
+            border-radius: 4px;
+            background-color: var(--disabledColor);
+        }
+
+        .start {
+            background-color: #c8f7c5;
+        }
+
+        .stop {
+            background-color: #f7c5c5;
+        }
+
+        .active-devices {
+            margin-top: 25px;
+            font-weight: bold;
+        }
+
+        .icons {
+            font-size: 18px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="sidebar">
+        <ul>
+            <li><a href="#" class="nav-item">Suche</a></li>
+            <li><a href="#">Einstellungen</a></li>
+            <li><a href="#">Geräte</a></li>
+            <li><a href="#">Räume</a></li>
+            <li><a href="#">Pläne</a></li>
+            <li><a href="#">Statistiken</a></li>
+            <li><a href="#">Account</a></li>
+            <li><a href="#">Übersicht</a></li>
+        </ul>
+    </div>
+    <div class="main">
+        <h2>🏠 Übersicht</h2>
+
+        <div class="plan-section">
+            <h3>Nächster Plan</h3>
+            <p>Fensterreinigung Küche <a href="#" class="more-info">➔</a></p>
+        </div>
+
+        <div class="room-section">
+            <h3>Räume</h3>
+            <img src="Raumaufteilung.png" alt="Hausplan">
+            <a href="#" class="more-info"><i class="fas fa-arrow-right"></i></a>
+        </div>
+
+        <div class="device-section">
+            <h3>Geräteübersicht</h3>
+
+            <div id="device-list" class="device-container">
+                <div class="device">
+                    <div class="device-name">Staubi</div>
+                    <div class="device-actions"><button class="toggle-btn start">Start</button></div>
+                    <div class="device-battery">49% <i class="fas fa-battery-half"></i></div>
+                    <div class="device-more"><a href="#"><i class="fas fa-arrow-right"></i></a></div>
+                </div>
+                <div class="device" data-device>
+                    <div class="device-name">Fensterli1</div>
+                    <div class="device-actions"><button class="toggle-btn start">Start</button></div>
+                    <div class="device-battery">100% <i class="fas fa-battery-full text-yellow"></i></div>
+                    <div class="device-more"><a href="#">➔</a></div>
+                </div>
+                <div class="device" data-device>
+                    <div class="device-name">Balkonli1</div>
+                    <div class="device-actions"><button class="toggle-btn start">Start</button></div>
+                    <div class="device-battery">0% <i class="fas fa-battery-empty"></i></div>
+                    <div class="device-more"><a href="#">➔</a></div>
+                </div>
+                <div class="device disabled" data-device>
+                    <div class="device-name">Balkonli2</div>
+                    <div class="device-actions"><button class="toggle-btn disabled">Start</button></div>
+                    <div class="device-battery">??? <i class="fas fa-xmark"></i></div>
+                    <div class="device-more"><a href="#"><i class="fas fa-arrow-right"></i></a></div>
+                </div>
+                <div class="device" data-device>
+                    <div class="device-name">Fensterli2</div>
+                    <div class="device-actions"><button class="toggle-btn start ">Start</button></div>
+                    <div class="device-battery">100% <i class="fas fa-battery-full"></i></div>
+                    <div class="device-more"><a href="#"><i class="fas fa-arrow-right"></i></a></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="active-devices">
+            Aktive Geräte: <span id="active-count">0</span>
+            <div class="icons">
+                <span>⏸</span> <span><i class="fa fa-stop"></i></span>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const buttons = document.querySelectorAll(".toggle-btn");
+        const activeCounter = document.getElementById("active-count");
+
+        function updateActiveCount() {
+            const activeDevices = document.querySelectorAll(".toggle-btn.stop").length;
+            activeCounter.textContent = activeDevices;
+        }
+
+        buttons.forEach(btn => {
+            btn.addEventListener("click", () => {
+                btn.classList.toggle("start");
+                btn.classList.toggle("stop");
+                btn.innerHTML = btn.classList.contains("start") ? "Start" : `<i class="fas fa-stop"></i> Stop`;
+                updateActiveCount();
+            });
+        });
+    </script>
+</body>
+
+</html>

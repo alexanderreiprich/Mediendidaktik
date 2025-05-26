@@ -4,6 +4,7 @@ import Preview from './Preview/Preview';
 import Button from '../UI/Button';
 import { combineCode } from '../../utils/codeUtils';
 import './CodePlayground.css';
+import LoadTaskButton from '../UI/LoadTaskButton';
 
 const CodePlayground = () => {
   const [htmlCode, setHtmlCode] = useState('<!-- Gib hier deinen HTML-Code ein -->\n<h1>Mein Code-Playground</h1>\n<p>Bearbeite HTML, CSS und JavaScript und sieh dir das Ergebnis an!</p>\n<button id="testButton">Klick mich!</button>');
@@ -37,6 +38,12 @@ const CodePlayground = () => {
     setJsCode(newCode);
   };
 
+  const handleCodeLoad = (html, css, js) => {
+    setHtmlCode(html);
+    setCssCode(css);
+    setJsCode(js);
+  };
+
   return (
     <div className="code-playground">
       <header className="playground-header">
@@ -45,6 +52,7 @@ const CodePlayground = () => {
           <Button onClick={toggleEditor}>{
             editorVisible ? "Editor verstecken" : "Editor anzeigen"
           }</Button>
+          <LoadTaskButton onCodeLoad={handleCodeLoad} />
         </div>
       </header>
       
