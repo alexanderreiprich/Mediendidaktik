@@ -6,6 +6,8 @@ export const combineCode = (html, css, js) => {
     <html>
     <head>
       <style>${css}</style>
+      <title>Smart Clean Dashboard</title>
+      <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
     </head>
     <body>${html}
       <script>${js}</script>

@@ -3,7 +3,6 @@ import EditorTabs from './EditorTabs';
 import HtmlEditor from './HTMLEditor';
 import CssEditor from './CSSEditor';
 import JsEditor from './JsEditor';
-import Button from '../../UI/Button';
 import './Editor.css';
 
 const Editor = ({ htmlCode, cssCode, jsCode, onHtmlChange, onCssChange, onJsChange }) => {
