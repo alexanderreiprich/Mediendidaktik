@@ -2,9 +2,8 @@ import React, { useState, useEffect } from 'react';
 import Editor from './Editor/Editor';
 import Preview from './Preview/Preview';
 import Button from '../UI/Button';
-import { combineCode } from '../../utils/codeUtils';
+import { combineCode, extractCode } from '../../utils/codeUtils';
 import './CodePlayground.css';
-import LoadTaskButton from '../UI/LoadTaskButton';
 
 const CodePlayground = () => {
   const [htmlCode, setHtmlCode] = useState('<!-- Gib hier deinen HTML-Code ein -->\n<h1>Mein Code-Playground</h1>\n<p>Bearbeite HTML, CSS und JavaScript und sieh dir das Ergebnis an!</p>\n<button id="testButton">Klick mich!</button>');
@@ -20,6 +19,27 @@ const CodePlayground = () => {
   const toggleEditor = () => {
     setEditorVisible(prevState => !prevState);
   }
+
+  const handleLoadTask = async () => {
+    try {
+      const response = await fetch('/hci-app.html');
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+      const htmlContent = await response.text();
+      const codeParts = extractCode(htmlContent);
+      
+      if (!codeParts.html && !codeParts.css && !codeParts.js) {
+        throw new Error('Keine Code-Teile gefunden in der HTML-Datei');
+      }
+      
+      // return the aprts to the parent
+      handleCodeLoad(codeParts.html, codeParts.css, codeParts.js);
+    } catch (error) {
+      console.error('Fehler beim Laden der Datei:', error);
+      alert('Fehler beim Laden der Datei: ' + error.message);
+    }
+  };
 
   useEffect(() => {
     const combined = combineCode(htmlCode, cssCode, jsCode);
@@ -52,7 +72,9 @@ const CodePlayground = () => {
           <Button onClick={toggleEditor}>{
             editorVisible ? "Editor verstecken" : "Editor anzeigen"
           }</Button>
-          <LoadTaskButton onCodeLoad={handleCodeLoad} />
+          <Button onClick={handleLoadTask}>{
+            "Aufgabe laden"
+          }</Button>
         </div>
       </header>
       
