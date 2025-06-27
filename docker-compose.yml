@@ -1,0 +1,22 @@
+version: '3.9'
+services:
+  backend:
+    build:
+      context: ./backend
+    container_name: lti-backend
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./userfiles:/usr/src/app/userfiles  # persistente Dateispeicherung
+    environment:
+      - JWT_SECRET=supersecretjwtkey #CHANGE
+      - NODE_ENV=production
+    restart: unless-stopped
+
+  frontend:
+    build:
+      context: ./frontend
+    container_name: lti-frontend
+    ports:
+      - "3001:3000"
+    restart: unless-stopped
