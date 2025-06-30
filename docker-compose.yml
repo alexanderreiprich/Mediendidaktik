@@ -7,8 +7,8 @@ services:
     ports:
       - "3000:3000"
     volumes:
-      - /etc/ssl/private/lti-app.key:/etc/ssl/private/lti-app.key:ro
-      - /etc/ssl/certs/lti-app.crt:/etc/ssl/certs/lti-app.crt:ro
+      - ./certs/lti-app.key:/etc/ssl/private/lti-app.key:ro
+      - ./certs/lti-app.crt:/etc/ssl/certs/lti-app.crt:ro
       - ./userfiles:/usr/src/app/userfiles  # persistente Dateispeicherung
     environment:
       - JWT_SECRET=supersecretjwtkey

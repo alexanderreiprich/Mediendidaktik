@@ -159,7 +159,7 @@ app.all('/launch', (req, res) => {
     const token = jwt.sign(user, process.env.JWT_SECRET, { expiresIn: '2h' });
 
     res.cookie('token', token, { httpOnly: true, secure: true });
-    res.redirect('https://hci-lti-lernapp.imn.htwk-leipzig.de:3001'); // oder React-Route
+    res.redirect('http://141.57.8.198:3001/'); // oder React-Route
 
     // res.send(`Hallo ${decoded.name}!
 	// E-Mail: ${decoded.email}
