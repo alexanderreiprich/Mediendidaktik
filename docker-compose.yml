@@ -7,11 +7,9 @@ services:
     ports:
       - "3000:3000"
     volumes:
-      - ./certs/lti-app.key:/etc/ssl/private/lti-app.key:ro
-      - ./certs/lti-app.crt:/etc/ssl/certs/lti-app.crt:ro
       - ./userfiles:/usr/src/app/userfiles  # persistente Dateispeicherung
     environment:
-      - JWT_SECRET=supersecretjwtkey
+      - JWT_SECRET=supersecretjwtkey #CHANGE
       - NODE_ENV=production
     restart: unless-stopped
 

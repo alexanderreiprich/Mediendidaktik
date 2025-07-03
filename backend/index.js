@@ -1,22 +1,16 @@
 const express = require('express');
-const https = require('https');
-const fs = require('fs');
 const crypto = require('crypto');
-const path = require('path');
 const jwt = require('jsonwebtoken');
 const cookieParser = require('cookie-parser');
 const fileController = require('./fileController');
 const jwksClient = require("jwks-rsa");
 
 const app = express();
-const httpsPort = 3000;
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 
 // In-Memory Storage (für Development)
-let platforms = {};
-let keys = {};
 let issuerString = "";
 
 const client = jwksClient({
@@ -52,29 +46,9 @@ function generateKeyPair() {
   });
 }
 
+let publicKey = "";
 const keyPair = generateKeyPair();
 const keyId = 'key-' + Date.now()
-
-// SSL-Optionen laden
-let sslOptions;
-try {
-  sslOptions = {
-    key: fs.readFileSync('/etc/ssl/private/lti-app.key'),
-    cert: fs.readFileSync('/etc/ssl/certs/lti-app.crt')
-  };
-  console.log('✅ SSL-Zertifikate gefunden');
-} catch (error) {
-  console.log('❌ SSL-Zertifikate nicht gefunden:', error.message);
-  console.log('💡 Erstelle sie mit:');
-  console.log('sudo openssl req -x509 -nodes -days 365 -newkey rsa:2048 \\');
-  console.log('    -keyout /etc/ssl/private/lti-app.key \\');
-  console.log('    -out /etc/ssl/certs/lti-app.crt \\');
-  console.log('    -subj "/C=DE/ST=Berlin/L=Berlin/O=LTI-App/CN=hci-lti-lernapp.imn.htwk-leipzig.de"');
-  process.exit(1);
-}
-
-const httpsServer = https.createServer(sslOptions, app);
-let publicKey = "";
 
 // JWKS Endpoint (Keyset URL)
 app.get('/keys', (req, res) => {
@@ -159,11 +133,7 @@ app.all('/launch', (req, res) => {
     const token = jwt.sign(user, process.env.JWT_SECRET, { expiresIn: '2h' });
 
     res.cookie('token', token, { httpOnly: true, secure: true });
-    res.redirect('http://141.57.8.198:3001/'); // oder React-Route
-
-    // res.send(`Hallo ${decoded.name}!
-	// E-Mail: ${decoded.email}
-	//     `);
+    res.redirect('https://hci-lti-lernapp.imn.htwk-leipzig.de/'); // oder React-Route
   });
 });
 
@@ -180,15 +150,6 @@ app.get('/health', (req, res) => {
   });
 });
 
-// // LTI Launch Endpoint (verkürzt)
-// app.post('/lti/launch', (req, res) => {
-//   const user = { sub: 'user-id-xyz', name: 'John Doe', email: 'john@example.com' };
-//   const token = jwt.sign(user, process.env.JWT_SECRET, { expiresIn: '2h' });
-//
-//   res.cookie('token', token, { httpOnly: true, secure: true });
-//   res.redirect('/'); // oder React-Route
-// });
-
 // 🔐 JWT Middleware
 function authenticateJWT(req, res, next) {
   const token = req.cookies?.token;
@@ -203,6 +164,8 @@ function authenticateJWT(req, res, next) {
 // API Routen für Datei lesen/schreiben
 app.use('/api', authenticateJWT, fileController);
 
-https.createServer(sslOptions, app).listen(3000, () => {
-  console.log('✅ HTTPS Backend läuft auf Port 3000');
+app.set('trust proxy', 1); // wichtig für korrekte Erkennung von HTTPS via Proxy
+
+app.listen(process.env.PORT || 3000, () => {
+  console.log('🌐 Express server läuft auf Port ' + (process.env.PORT || 3000));
 });
