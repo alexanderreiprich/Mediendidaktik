@@ -1,0 +1,15 @@
+.LandingPage-component {
+  display: flex;
+}
+
+.landing-page {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  width: 100vw;
+  background-color: #cbcbcb;
+}
+
+.landing-page > div {
+  margin: auto;
+}
