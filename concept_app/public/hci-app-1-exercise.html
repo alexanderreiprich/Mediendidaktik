@@ -1,0 +1,421 @@
+<!DOCTYPE html>
+<html lang="de">
+
+<head>
+    <meta charset="UTF-8" />
+    <title>Smart Clean Dashboard</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+    <style>
+        :root {
+            --primaryColor: #fdf0c6;
+            --fontColor: #4a3f1c;
+            --fontHoverColor: #000000;
+            --borderColor: #e0d8b0;
+            --cardPadding: 3rem;
+            --internalCardPadding: 3rem;
+            --disabledColor: #eee;
+            --disabledSecondaryColor: #aaa;
+            --attentionColor: #f7c5c5;
+        }
+
+        body {
+            font-family: "Times New Roman", serif;
+            background-color: var(--primaryColor);
+            margin: 0;
+            display: flex;
+        }
+
+        .sidebar {
+            width: 200px;
+            padding: var(--internalCardPadding);
+            border-right: 1px solid var(--borderColor);
+        }
+
+        .sidebar ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        .sidebar li {
+            margin-bottom: var(--cardPadding);
+            font-weight: bold;
+            color: var(--fontColor);
+        }
+
+        .sidebar li:hover {
+            color: var(--fontHoverColor);
+        }
+
+        .main {
+            flex: 1;
+            padding: var(--cardPadding);
+            color: var(--fontColor);
+        }
+
+        h2 {
+            font-size: 22px;
+        }
+
+        .plan-section,
+        .room-section,
+        .device-section {
+            margin-top: var(--cardPadding);
+        }
+
+        .more-info {
+            color: var(--fontColor);
+            text-decoration: none;
+        }
+
+        .device-container {
+            width: 100%;
+        }
+
+        .device {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            width: 100%;
+            margin: 6px 0;
+            padding: 6px;
+            background-color: var(--primaryColor);
+        }
+
+        .device_issue {
+            background-color: var(--attentionColor);
+        }
+
+        .device-name,
+        .device-actions {
+            width: 25%;
+        }
+
+        .device-more,
+        .device-battery {
+            width: 25%;
+            display: flex;
+            justify-content: end;
+            pointer-events: all;
+        }
+
+        .device-more a,
+        .device-battery a {
+            color: var(--fontColor);
+            text-decoration: none;
+        }
+
+        .disabled {
+            color: var(--disabledSecondaryColor);
+            pointer-events: none;
+        }
+
+        .device span {
+            margin: 0 5px;
+        }
+
+        .toggle-btn {
+            padding: 4px 10px;
+            cursor: pointer;
+            border: 1px solid var(--disabledSecondaryColor);
+            border-radius: 4px;
+            background-color: var(--disabledColor);
+        }
+
+        .start {
+            background-color: #c8f7c5;
+        }
+
+        .stop {
+            background-color: var(--attentionColor);
+        }
+
+        .active-devices {
+            margin-top: 25px;
+            font-weight: bold;
+        }
+
+        .icons {
+            font-size: 18px;
+            margin-top: 10px;
+            display: flex;
+            gap: 15px;
+            cursor: pointer;
+        }
+
+        .popup-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            justify-content: center;
+            align-items: center;
+        }
+
+        .popup-box {
+            background: var(--disabledColor);
+            padding: 20px;
+            border-radius: 10px;
+            min-width: 300px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            text-align: center;
+        }
+
+        .close-btn {
+            cursor: pointer;
+        }
+
+        .close-btn:hover {
+            background: --borderColor;
+        }
+
+        #active-device-list div {
+            margin: 5px 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        #active-device-list button {
+            margin-left: 10px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="sidebar">
+        <ul>
+            <li><a href="#" class="nav-item">Suche</a></li>
+            <li><a href="#">Einstellungen</a></li>
+            <li><a href="#">Geräte</a></li>
+            <li><a href="#">Räume</a></li>
+            <li><a href="#">Pläne</a></li>
+            <li><a href="#">Statistiken</a></li>
+            <li><a href="#">Account</a></li>
+            <li><a href="#">Übersicht</a></li>
+        </ul>
+    </div>
+
+    <div class="main">
+        <h2>🏠 Übersicht</h2>
+
+        <div class="plan-section">
+            <h3>Nächster Plan</h3>
+            <p>Fensterreinigung Küche <a href="#" class="more-info">➔</a></p>
+        </div>
+
+        <div class="room-section">
+            <h3>Räume</h3>
+            <img src="assets/Raumaufteilung.png" alt="Hausplan">
+            <a href="#" class="more-info"><i class="fas fa-arrow-right"></i></a>
+        </div>
+
+        <div class="device-section">
+            <h3>Geräteübersicht</h3>
+
+            <div id="device-list" class="device-container">
+                <div class="device" data-device data-device-id="vacuumer1">
+                    <div class="device-name">Staubi</div>
+                    <div class="device-actions">
+                        <button class="toggle-btn stop"><i class="fas fa-stop"></i> Stop</button>
+                        <button class="toggle-btn pause-btn" style="display: flex;"><i class="fas fa-pause"></i> Pause</button>
+                    </div>
+                    <div class="device-battery">49% <i class="fas fa-battery-half"></i></div>
+                    <div class="device-more"><a href="#"><i class="fas fa-arrow-right"></i></a></div>
+                </div>
+                <div class="device" data-device data-device-id="windowcleaner1">
+                    <div class="device-name">Fensterli1</div>
+                    <div class="device-actions">
+                        <button class="toggle-btn start">Start</button>
+                        <button class="toggle-btn pause-btn" style="display: none;"><i class="fas fa-pause"></i> Pause</button>
+                    </div>
+                    <div class="device-battery">100% <i class="fas fa-battery-full"></i></div>
+                    <div class="device-more"><a href="#">➔</a></div>
+                </div>
+                <div class="device device_issue" data-device data-device-id="balconycleaner1" onclick="openPopup('device-stuck-popup')">
+                    <div class="device-name">Balkonli1</div>
+                    <div class="device-actions">
+                        <button class="toggle-btn start issue disabled">Start</button>
+                        <button class="toggle-btn pause-btn" style="display: none;"><i class="fas fa-pause"></i> Pause</button>
+                    </div>
+                    <div class="device-battery">97% <i class="fas fa-battery-full"></i></div>
+                    <div class="device-more"><a href="#">➔</a></div>
+                </div>
+                <div class="device" data-device data-device-id="vacuumer2">
+                    <div class="device-name">Staubi</div>
+                    <div class="device-actions">
+                        <button class="toggle-btn start issue" onclick="openPopup('empty-battery-popup')">Start</button>
+                        <button class="toggle-btn pause-btn" style="display: none;"><i class="fas fa-pause"></i> Pause</button>
+                    </div>
+                    <div class="device-battery">0% <i class="fas fa-battery-empty"></i></div>
+                    <div class="device-more"><a href="#">➔</a></div>
+                </div>
+                <div class="device disabled" data-device data-device-id="bathroomcleaner1">
+                    <div class="device-name">Badezimmeri</div>
+                    <div class="device-actions">
+                        <button class="toggle-btn start disabled">Start</button>
+                        <button class="toggle-btn pause-btn" style="display: none;"><i class="fas fa-pause"></i> Pause</button>
+                    </div>
+                    <div class="device-battery">??? <i class="fas fa-xmark"></i></div>
+                    <div class="device-more"><a href="#"><i class="fas fa-arrow-right"></i></a></div>
+                </div>
+                <div class="device" data-device data-device-id="windowcleaner2">
+                    <div class="device-name">Fensterli2</div>
+                    <div class="device-actions">
+                        <button class="toggle-btn start">Start</button>
+                        <button class="toggle-btn pause-btn" style="display: none;"><i class="fas fa-pause"></i> Pause</button>
+                    </div>
+                    <div class="device-battery">100% <i class="fas fa-battery-full"></i></div>
+                    <div class="device-more"><a href="#"><i class="fas fa-arrow-right"></i></a></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="active-devices">
+            Aktive Geräte: <span id="active-count">0</span>
+            <div id="active-device-list"></div>
+            <div class="icons">
+                <div onclick="pauseAllDevices()">⏸ Pause alle</div>
+                <div onclick="deactivateAllDevices()"><i class="fa fa-stop"></i> Stop alle</div>
+            </div>
+        </div>
+
+        <div class="popup-overlay" id="empty-battery-popup">
+            <div class="popup-box">
+                <h1>Error</h1>
+                <p>Nullpointerexception at line 42</p>
+                <p>view stacktrace at: example-stacktrace</p>
+                <button class="close-btn" onclick="closePopup('empty-battery-popup')">Schließen</button>
+            </div>
+        </div>
+
+        <div class="popup-overlay" id="device-stuck-popup">
+            <div class="popup-box">
+                <h3>Hindernis</h3>
+                <p>Gerät steckt fest.</p>
+                <p>Bitte prüfen.</p>
+                <button class="close-btn" onclick="closePopup('device-stuck-popup')">Schließen</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+    const deviceStates = [];
+
+    document.querySelectorAll('.device').forEach((deviceEl, index) => {
+        const id = deviceEl.dataset.deviceId || `device-${index}`;
+        const name = deviceEl.querySelector('.device-name')?.textContent || `Gerät ${index + 1}`;
+
+        deviceStates.push({
+            id,
+            name,
+            state: deviceEl.querySelector('.toggle-btn.stop') ? 'started' : 'stopped'
+        });
+
+        // Device ID setzen, falls nicht im HTML
+        deviceEl.dataset.deviceId = id;
+    });
+
+    function getDeviceState(id) {
+        return deviceStates.find(d => d.id === id);
+    }
+
+    function setDeviceState(id, newState) {
+        const device = getDeviceState(id);
+        if (device) device.state = newState;
+        updateUI();
+    }
+
+    function updateUI() {
+        deviceStates.forEach(device => {
+            const deviceEl = document.querySelector(`[data-device-id="${device.id}"]`);
+            const startStopBtn = deviceEl.querySelector('.toggle-btn:not(.pause-btn)');
+            const pauseBtn = deviceEl.querySelector('.pause-btn');
+
+            switch (device.state) {
+                case 'started':
+                    startStopBtn.innerHTML = '<i class="fas fa-stop"></i> Stop';
+                    startStopBtn.classList.add('stop');
+                    startStopBtn.classList.remove('start');
+                    pauseBtn.style.display = 'inline';
+                    break;
+                case 'paused':
+                    startStopBtn.innerHTML = 'Start';
+                    startStopBtn.classList.add('start');
+                    startStopBtn.classList.remove('stop');
+                    pauseBtn.style.display = 'none';
+                    break;
+                case 'stopped':
+                default:
+                    startStopBtn.innerHTML = 'Start';
+                    pauseBtn.style.display = 'none';
+                    startStopBtn.classList.add('start');
+                    startStopBtn.classList.remove('stop');
+                    break;
+            }
+        });
+
+        const activeCount = deviceStates.filter(d => d.state === 'started').length;
+        document.getElementById("active-count").textContent = activeCount;
+    }
+
+    function startAllDevices() {
+        deviceStates.forEach(d => {
+            // Nur Geräte starten, die nicht deaktiviert/problematisch sind
+            const deviceEl = document.querySelector(`[data-device-id="${d.id}"]`);
+            const startStopBtn = deviceEl.querySelector('.toggle-btn:not(.pause-btn)');
+            if (!startStopBtn.classList.contains('disabled') && !startStopBtn.classList.contains('issue')) {
+                d.state = 'started';
+            }
+        });
+        updateUI();
+    }
+
+    function deactivateAllDevices() {
+        deviceStates.forEach(d => d.state = 'stopped');
+        updateUI();
+    }
+
+    function pauseAllDevices() {
+        deviceStates.forEach(d => {
+            if (d.state === 'started') d.state = 'paused';
+        });
+        updateUI();
+    }
+
+    // Event Listeners
+    document.querySelectorAll('.device').forEach(deviceEl => {
+        const id = deviceEl.dataset.deviceId;
+        const startStopBtn = deviceEl.querySelector('.toggle-btn:not(.pause-btn)');
+        const pauseBtn = deviceEl.querySelector('.pause-btn');
+
+        startStopBtn.addEventListener('click', () => {
+            const state = getDeviceState(id).state;
+            if (startStopBtn.classList.contains('disabled')) return;
+
+            if (state === 'stopped') {
+                setDeviceState(id, 'started');
+            } else {
+                setDeviceState(id, 'stopped');
+            }
+        });
+
+        pauseBtn.addEventListener('click', () => {
+            setDeviceState(id, 'paused');
+        });
+    });
+    function openPopup(id) {
+        document.getElementById(id).style.display = 'flex';
+    }
+
+    function closePopup(id) {
+        document.getElementById(id).style.display = 'none';
+    }
+
+    updateUI();
+    </script>
+</body>
+
+</html>
