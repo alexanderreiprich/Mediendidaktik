@@ -3,6 +3,23 @@ import './LandingPage.css';
 import TaskCard from '../UI/TaskCard';
 
 const LandingPage = () => {
+
+    useEffect(() => {
+        fetch("http://localhost:3000/api/task/1", {
+            method: "GET",
+            credentials: "include" // wichtig für Cookies / Session
+        })
+            .then(response => {
+                if (response.status === 204) {
+                    // Kein Inhalt – entsprechend behandeln
+                    console.log("No content (204)");
+                    return null;
+                }
+                return response.json();
+            })
+            .catch(error => console.error("Fetch error:", error));
+    }, []);
+
   return (
     <div className="landing-page">
       <div>

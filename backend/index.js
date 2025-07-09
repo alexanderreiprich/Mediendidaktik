@@ -4,11 +4,18 @@ const jwt = require('jsonwebtoken');
 const cookieParser = require('cookie-parser');
 const fileController = require('./fileController');
 const jwksClient = require("jwks-rsa");
+const cors = require('cors');
 
 const app = express();
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
+
+// Erlaube Anfragen von http://localhost:3001 (React-Dev-Server)
+app.use(cors({
+  origin: true,
+  credentials: true // wichtig, wenn du Cookies oder Auth-Header verwendest
+}));
 
 // In-Memory Storage (für Development)
 let issuerString = "";
