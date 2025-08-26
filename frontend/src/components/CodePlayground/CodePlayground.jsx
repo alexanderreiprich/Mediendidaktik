@@ -39,12 +39,8 @@ const CodePlayground = ({sample = false}) => {
             return response.json();
         })
         .then(data => {
-          var content = ""
-          if (content == "") {
-            content = data.message
-            handleCodeLoad(content, content, content); //Content wird eingefügt (Testweise der gleiche in alle Tabs)
-          }
-          
+            //TODO Add checks
+            handleCodeLoad(data.html, data.css, data.js);
         })
         .catch(error => console.error("Fetch error:", error));
   };

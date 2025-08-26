@@ -1,0 +1,5 @@
+{
+  "html": "<!DOCTYPE html>\n<html>\n<body>\n\n<h1>Aufgabe 1 Lösung</h1>\n<h1>Aufgabe 2 Start</h1>\n\n</body>\n</html>",
+  "css": "h1 { color: red; }",
+  "js": "console.log('hi')"
+}
