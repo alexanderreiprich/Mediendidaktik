@@ -3,43 +3,57 @@ import './TaskCard.css';
 import Button from '../UI/Button';
 import { Link } from 'react-router-dom';
 
-const TaskCard = ({children, id = 1}) => {
-  const [firstButton, setFirstButton] = useState(<Button className="disabled">Zur Aufgabe</Button>);
-  const [secondButton, setSecondButton] = useState(<Button className="disabled">Musterlösung</Button>);
+const TaskCard = ({ children, id = 1 }) => {
+  const [taskDone, setTaskDone] = useState(false); // Aufgabe N bearbeitet?
+  const [prevTaskDone, setPrevTaskDone] = useState(false); // Aufgabe N-1 bearbeitet?
 
-  //Prüft, ob Inhalt verfügbar ist, und aktiviert dementsprechende Buttons
-  const initButtons = (url, btnNr) => {
-    const resp = fetch(url, {
+  // Prüfen ob eine Aufgabe bearbeitet wurde (Datei existiert)
+  const checkTaskDone = async (taskId) => {
+    try {
+      const resp = await fetch(`http://localhost:3000/api/task/${taskId}`, {
         method: "GET",
-        credentials: "include" // wichtig für Cookies / Session
-    })
-        .then(response => {
-            if (response.status !== 204) {
-                // Inhalt vorhanden, Button aktivieren
-                if (btnNr === 1){
-                  setFirstButton(<Link to={`/code/${id}`}><Button>Zur Aufgabe</Button></Link>)
-                }
-                else {
-                  setSecondButton(<Link to={`/code/${id}/sample`}><Button>Musterlösung</Button></Link>)
-                }
-                return response.json();
-            }
-            return null;
-        })
-        .catch(error => console.error("Fetch error:", error));
-  }
+        credentials: "include",
+      });
+      return resp.status !== 204; // 204 = nichts gespeichert → nicht erledigt
+    } catch (err) {
+      console.error("Fetch error:", err);
+      return false;
+    }
+  };
 
   useEffect(() => {
-    initButtons("http://localhost:3000/api/task/" + id, 1)
-    initButtons("http://localhost:3000/api/task/" + (id + 1), 2)
-  }, []);
+    // Aufgabe N prüfen
+    checkTaskDone(id).then(setTaskDone);
+
+    // Wenn es eine vorherige Aufgabe gibt, die prüfen
+    if (id > 1) {
+      checkTaskDone(id - 1).then(setPrevTaskDone);
+    } else {
+      setPrevTaskDone(true); // Aufgabe 1 ist immer frei
+    }
+  }, [id]);
 
   return (
     <div className="task-card">
-      <span className='title'>{children}</span>
-      <div className='button-container'>
-        {firstButton}
-        {secondButton}
+      <span className="title">{children}</span>
+      <div className="button-container">
+        {/* Zur Aufgabe */}
+        {prevTaskDone ? (
+          <Link to={`/code/${id}`}>
+            <Button>Zur Aufgabe</Button>
+          </Link>
+        ) : (
+          <Button className="disabled">Zur Aufgabe</Button>
+        )}
+
+        {/* Musterlösung */}
+        {taskDone ? (
+          <Link to={`/code/${id}/sample`}>
+            <Button>Musterlösung</Button>
+          </Link>
+        ) : (
+          <Button className="disabled">Musterlösung</Button>
+        )}
       </div>
     </div>
   );

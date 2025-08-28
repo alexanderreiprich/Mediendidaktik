@@ -6,6 +6,9 @@
 - [ ] jwk secret in .env?
 - [ ] Was passiert, wenn der JWT abläuft?
 - [ ] Remove Cors
+- [ ] Aufgabe Laden Button nicht mehr sinnvoll?
+- [ ] Router fixen, dass Browser Back ordentlich geht
+- [ ] Live Preview fixen. Wird manchmal nicht geladen
 
 ## Next Steps
 

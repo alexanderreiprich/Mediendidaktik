@@ -10,11 +10,11 @@ const CodePlayground = ({sample = false}) => {
   const params = useParams();
 
   const [htmlCode, setHtmlCode] = useState('<!-- Gib hier deinen HTML-Code ein -->\n<h1>Mein Code-Playground</h1>\n<p>Bearbeite HTML, CSS und JavaScript und sieh dir das Ergebnis an!</p>\n<button id="testButton">Klick mich!</button>');
-  
+
   const [cssCode, setCssCode] = useState('/* Gib hier deinen CSS-Code ein */\nbody {\n  font-family: Arial, sans-serif;\n  margin: 20px;\n  background-color: #f5f5f5;\n}\n\nh1 {\n  color: #333;\n}\n\nbutton {\n  padding: 8px 16px;\n  background-color: #4CAF50;\n  color: white;\n  border: none;\n  border-radius: 4px;\n  cursor: pointer;\n}\n\nbutton:hover {\n  background-color: #45a049;\n}');
-  
+
   const [jsCode, setJsCode] = useState('// Gib hier deinen JavaScript-Code ein\ndocument.getElementById("testButton").addEventListener(\n "click", () => {\n  console.log("hi")\n }\n);\n');
-  
+
   const [combinedCode, setCombinedCode] = useState('');
 
   const [editorVisible, setEditorVisible] = useState(true);
@@ -23,36 +23,94 @@ const CodePlayground = ({sample = false}) => {
     setEditorVisible(prevState => !prevState);
   }
 
-  // Gespeicherter Content wird geladen
+  // Gespeicherter Content oder Sample laden
   const handleLoadTask = async () => {
-    var url = "http://localhost:3000/api/task/" + params.id
-    if (sample) url += "/begin"
-    const resp = fetch(url, {
+    try {
+      let url;
+
+      if (sample) {
+        // Sample-Modus: nächste Aufgabe laden
+        url = `http://localhost:3000/api/task/${parseInt(params.id) + 1}/begin`;
+      } else {
+        // Normal-Modus: erst versuchen gespeicherten Inhalt zu laden
+        const resp = await fetch(`http://localhost:3000/api/task/${params.id}`, {
+          method: "GET",
+          credentials: "include"
+        });
+
+        if (resp.status === 204) {
+          // kein gespeicherter Inhalt → begin laden
+          url = `http://localhost:3000/api/task/${params.id}/begin`;
+        } else {
+          const data = await resp.json();
+          handleCodeLoad(data.html, data.css, data.js);
+          return; // fertig
+        }
+      }
+
+      // Falls wir hier landen → begin laden (normal oder sample)
+      const respBegin = await fetch(url, {
         method: "GET",
-        credentials: "include" // wichtig für Cookies / Session
-    })
-        .then(response => {
-            if (response.status === 204) {
-                // Kein Inhalt – entsprechender log
-                console.log("No content (204)");
-            }
-            return response.json();
-        })
-        .then(data => {
-            //TODO Add checks
-            handleCodeLoad(data.html, data.css, data.js);
-        })
-        .catch(error => console.error("Fetch error:", error));
+        credentials: "include"
+      });
+
+      if (!respBegin.ok) {
+        throw new Error(`Fehler beim Laden: ${respBegin.status}`);
+      }
+
+      const data = await respBegin.json();
+      handleCodeLoad(data.html, data.css, data.js);
+
+    } catch (error) {
+      console.error("Fetch error:", error);
+    }
   };
 
+
+  async function saveTask(html, css, js) {
+    try {
+      await fetch(`http://localhost:3000/api/task/${params.id}`, {
+        method: "POST",
+        credentials: "include",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ html, css, js })
+      });
+      console.log("Autosaved!");
+    } catch (err) {
+      console.error("Autosave failed", err);
+    }
+  }
+
   useEffect(() => {
-    handleLoadTask();
-    const combined = combineCode(htmlCode, cssCode, jsCode);
-    setCombinedCode(combined);
+      handleLoadTask(); // nur einmal beim Mount
+  }, []);
+
+  useEffect(() => {
+      const combined = combineCode(htmlCode, cssCode, jsCode);
+      setCombinedCode(combined);
   }, [htmlCode, cssCode, jsCode]);
 
+  useEffect(() => {
+    if (sample) return; // Kein Autosave im Sample-Modus
+
+    // debounce: speichere nach 5s Ruhe
+    const debounceTimer = setTimeout(() => {
+      saveTask(htmlCode, cssCode, jsCode);
+    }, 5000);
+
+    // throttle: alle 30s speichern, egal was passiert
+    const throttleTimer = setInterval(() => {
+      saveTask(htmlCode, cssCode, jsCode);
+    }, 30000);
+
+    return () => {
+      clearTimeout(debounceTimer);
+      clearInterval(throttleTimer);
+    };
+  }, [htmlCode, cssCode, jsCode, sample]);
+
   const handleHtmlChange = (newCode) => {
-    setHtmlCode(newCode);
+  setHtmlCode(newCode);
   };
 
   const handleCssChange = (newCode) => {
@@ -82,10 +140,10 @@ const CodePlayground = ({sample = false}) => {
           }</Button>
         </div>
       </header>
-      
+
       <div className="playground-content">
         {editorVisible && (
-          <Editor 
+          <Editor
             htmlCode={htmlCode}
             cssCode={cssCode}
             jsCode={jsCode}
@@ -94,7 +152,7 @@ const CodePlayground = ({sample = false}) => {
             onJsChange={handleJsChange}
           />
         )}
-        
+
         <Preview code={combinedCode} />
       </div>
     </div>
