@@ -9,7 +9,7 @@ import './CodePlayground.css';
 const CodePlayground = ({sample = false}) => {
   const params = useParams();
 
-  const [htmlCode, setHtmlCode] = useState('<!-- Gib hier deinen HTML-Code ein -->\n<h1>Mein Code-Playground</h1>\n<p>Bearbeite HTML, CSS und JavaScript und sieh dir das Ergebnis an!</p>\n<button id="testButton">Klick mich!</button>');
+  const [htmlCode, setHtmlCode] = useState('<!-- Gib hier deinen HTML-Code ein -->\n<h1>Mein Code-Playground</h1>\n<p>Bearbeite HTML, CSS und JavaScript und sieh dir das Ergebnis an!</p>\n<p>Dein Code wird automatisch gespeichert.</p>\n<button id="testButton">Klick mich!</button>');
 
   const [cssCode, setCssCode] = useState('/* Gib hier deinen CSS-Code ein */\nbody {\n  font-family: Arial, sans-serif;\n  margin: 20px;\n  background-color: #f5f5f5;\n}\n\nh1 {\n  color: #333;\n}\n\nbutton {\n  padding: 8px 16px;\n  background-color: #4CAF50;\n  color: white;\n  border: none;\n  border-radius: 4px;\n  cursor: pointer;\n}\n\nbutton:hover {\n  background-color: #45a049;\n}');
 
@@ -18,6 +18,8 @@ const CodePlayground = ({sample = false}) => {
   const [combinedCode, setCombinedCode] = useState('');
 
   const [editorVisible, setEditorVisible] = useState(true);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [modalCode, setModalCode] = useState('');
 
   const toggleEditor = () => {
     setEditorVisible(prevState => !prevState);
@@ -25,47 +27,9 @@ const CodePlayground = ({sample = false}) => {
 
   // Gespeicherter Content oder Sample laden
   const handleLoadTask = async () => {
-    try {
-      let url;
-
-      if (sample) {
-        // Sample-Modus: nächste Aufgabe laden
-        url = `http://localhost:3000/api/task/${parseInt(params.id) + 1}/begin`;
-      } else {
-        // Normal-Modus: erst versuchen gespeicherten Inhalt zu laden
-        const resp = await fetch(`http://localhost:3000/api/task/${params.id}`, {
-          method: "GET",
-          credentials: "include"
-        });
-
-        if (resp.status === 204) {
-          // kein gespeicherter Inhalt → begin laden
-          url = `http://localhost:3000/api/task/${params.id}/begin`;
-        } else {
-          const data = await resp.json();
-          handleCodeLoad(data.html, data.css, data.js);
-          return; // fertig
-        }
-      }
-
-      // Falls wir hier landen → begin laden (normal oder sample)
-      const respBegin = await fetch(url, {
-        method: "GET",
-        credentials: "include"
-      });
-
-      if (!respBegin.ok) {
-        throw new Error(`Fehler beim Laden: ${respBegin.status}`);
-      }
-
-      const data = await respBegin.json();
-      handleCodeLoad(data.html, data.css, data.js);
-
-    } catch (error) {
-      console.error("Fetch error:", error);
-    }
+    setModalCode(combinedCode);
+    setIsModalOpen(true);
   };
-
 
   async function saveTask(html, css, js) {
     try {
@@ -80,10 +44,6 @@ const CodePlayground = ({sample = false}) => {
       console.error("Autosave failed", err);
     }
   }
-
-  useEffect(() => {
-      handleLoadTask(); // nur einmal beim Mount
-  }, []);
 
   useEffect(() => {
       const combined = combineCode(htmlCode, cssCode, jsCode);
@@ -110,7 +70,7 @@ const CodePlayground = ({sample = false}) => {
   }, [htmlCode, cssCode, jsCode, sample]);
 
   const handleHtmlChange = (newCode) => {
-  setHtmlCode(newCode);
+    setHtmlCode(newCode);
   };
 
   const handleCssChange = (newCode) => {
@@ -121,10 +81,22 @@ const CodePlayground = ({sample = false}) => {
     setJsCode(newCode);
   };
 
-  const handleCodeLoad = (html, css, js) => {
+  const handleCopyCombinedCode = async () => {
+    try {
+      await navigator.clipboard.writeText(modalCode || combinedCode);
+    } catch (e) {
+      console.error('Copy failed', e);
+    }
+  };
+
+  const handleCloseModal = () => setIsModalOpen(false);
+
+  const handleSaveImportedCode = () => {
+    const { html, css, js } = extractCode(modalCode);
     setHtmlCode(html);
     setCssCode(css);
     setJsCode(js);
+    setIsModalOpen(false);
   };
 
   return (
@@ -136,7 +108,7 @@ const CodePlayground = ({sample = false}) => {
             editorVisible ? "Editor verstecken" : "Editor anzeigen"
           }</Button>
           <Button onClick={handleLoadTask}>{
-            "Aufgabe laden"
+            "Import/Export"
           }</Button>
         </div>
       </header>
@@ -155,6 +127,28 @@ const CodePlayground = ({sample = false}) => {
 
         <Preview code={combinedCode} />
       </div>
+
+      {isModalOpen && (
+        <div className="modal-backdrop">
+          <div className="modal">
+            <div className="modal-header">
+              <h2>Import/Export</h2>
+              <Button onClick={handleCloseModal}>Schließen</Button>
+            </div>
+            <div className="modal-body">
+              <textarea
+                value={modalCode}
+                onChange={(e) => setModalCode(e.target.value)}
+                className="modal-textarea"
+              />
+            </div>
+            <div className="modal-footer">
+              <Button onClick={handleCopyCombinedCode}>In Zwischenablage kopieren</Button>
+              <Button onClick={handleSaveImportedCode}>Speichern</Button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
