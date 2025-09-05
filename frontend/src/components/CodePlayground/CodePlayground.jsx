@@ -26,7 +26,48 @@ const CodePlayground = ({sample = false}) => {
   }
 
   // Gespeicherter Content oder Sample laden
-  const handleLoadTask = async () => {
+  const handleLoad = async () => {
+    try {
+      let url;
+      if (sample) {
+        // Sample-Modus: nächste Aufgabe laden
+        url = `http://localhost:3000/api/task/${parseInt(params.id) + 1}/begin`;
+      } else {
+        // Normal-Modus: erst versuchen gespeicherten Inhalt zu laden
+        const resp = await fetch(`http://localhost:3000/api/task/${params.id}`, {
+          method: "GET",
+          credentials: "include"
+        });
+
+        if (resp.status === 204) {
+          // kein gespeicherter Inhalt → begin laden
+          url = `http://localhost:3000/api/task/${params.id}/begin`;
+        } else {
+          const data = await resp.json();
+          handleCodeLoad(data.html, data.css, data.js);
+          return; // fertig
+        }
+      }
+
+      // Falls wir hier landen → begin laden (normal oder sample)
+      const respBegin = await fetch(url, {
+        method: "GET",
+        credentials: "include"
+      });
+
+      if (!respBegin.ok) {
+        throw new Error(`Fehler beim Laden: ${respBegin.status}`);
+      }
+
+      const data = await respBegin.json();
+      handleCodeLoad(data.html, data.css, data.js);
+    } catch (error) {
+      console.error("Fetch error:", error);
+    }
+  };
+
+  // Import/Export Modal öffnen
+  const handleImport = async () => {
     setModalCode(combinedCode);
     setIsModalOpen(true);
   };
@@ -69,6 +110,10 @@ const CodePlayground = ({sample = false}) => {
     };
   }, [htmlCode, cssCode, jsCode, sample]);
 
+  useEffect(() => {
+    handleLoad();
+  }, []);
+
   const handleHtmlChange = (newCode) => {
     setHtmlCode(newCode);
   };
@@ -99,6 +144,12 @@ const CodePlayground = ({sample = false}) => {
     setIsModalOpen(false);
   };
 
+  const handleCodeLoad = (html, css, js) => {
+    setHtmlCode(html);
+    setCssCode(css);
+    setJsCode(js);
+  }
+
   return (
     <div className="code-playground">
       <header className="playground-header">
@@ -107,7 +158,7 @@ const CodePlayground = ({sample = false}) => {
           <Button onClick={toggleEditor}>{
             editorVisible ? "Editor verstecken" : "Editor anzeigen"
           }</Button>
-          <Button onClick={handleLoadTask}>{
+          <Button onClick={handleImport}>{
             "Import/Export"
           }</Button>
         </div>
