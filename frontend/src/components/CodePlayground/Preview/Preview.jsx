@@ -12,7 +12,7 @@ const Preview = ({ code }) => {
           srcDoc={code}
           title="output"
           className="preview-iframe"
-          sandbox="allow-scripts"
+          sandbox="allow-scripts allow-same-origin"
         />
       </div>
     </div>

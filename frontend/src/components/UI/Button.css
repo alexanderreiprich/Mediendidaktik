@@ -17,3 +17,16 @@
 .ui-button:active {
   background-color: #3d8b40;
 }
+
+.disabled {
+  background-color: #969696;
+  cursor: default;
+}
+
+.disabled:hover {
+  background-color: #969696;
+}
+
+.disabled:active {
+  background-color: #969696;
+}
