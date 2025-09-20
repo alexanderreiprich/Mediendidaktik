@@ -88,6 +88,7 @@
 
         /* NAVBAR */
         .navbar {
+            /* TODO Aufgabe 3: Navbar mit display: flex sichtbar machen */
             display: flex;
             align-items: center;
             justify-content: space-between;
@@ -146,10 +147,12 @@
             /* TODO Aufgabe 2: Menü Sidebar visuell von der Hauptseite abgrenzen */
             /* TODO Aufgabe 3: Navigation einklappbar machen*/
             display: block;
+             /* TODO Aufgabe 3: position: fixed*/
             position: fixed;
             z-index: 10;
             top: 0;
             bottom: 0;
+            /*TODO Aufgabe 3: Mit  left: -1000px ist die Navbar außerhalb des Screens */
             left: -1000px;
             width: 100%;
             background-color: var(--cardColor);
@@ -221,6 +224,7 @@
             padding: var(--cardPadding);
             color: var(--fontColor);
             display: flex;
+            /* TODO Aufgabe 3: Mit einklappbarer Sidebar nicht mehr notwendig: flex:1 */
             flex-direction: column;
             gap: 1.5rem;
             height: auto;
@@ -499,9 +503,13 @@
         /* Tablet Layout */
         @media (min-width: 768px) {
             body {
-                flex-direction: row;
+                /* TODO Aufgabe 3: flex-direction: row für die sidebar */
+                flex-direction: column;
             }
-
+            /* TODO Aufgabe 3: content kann bei einer einklappbaren Sidebar block sein */
+            content {
+                display: flex;
+            }
             .sidebar {
                 width: 180px;
                 /* TODO Aufgabe 2: Menü Sidebar visuell von der Hauptseite abgrenzen */
@@ -625,6 +633,7 @@
     <content>
         <!-- TODO Aufgabe 3: logo "smart-clean-icon.svg" integrieren-->
         <div class="navbar">
+             <!-- TODO Aufgabe 3 toggleSidebar() und neue navbar Items integrieren-->
             <div class="navbar-left">
                 <div class="menu" onclick="toggleSidebar()">
                     <i class="fas fa-bars"></i>
@@ -632,7 +641,6 @@
                 <a class="logo" href="#">
                     <img class="logo-icon" src="smart-clean-icon.svg">
                 </a>
-                <!-- TODO Aufgabe 3 -->
                 <div class="search">
                     <input type="text" placeholder="Suchen...">
                 </div>

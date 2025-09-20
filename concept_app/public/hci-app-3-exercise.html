@@ -88,7 +88,8 @@
 
         /* NAVBAR */
         .navbar {
-            display: flex;
+            /* TODO Aufgabe 3: Navbar mit display: flex sichtbar machen */
+            display: none;
             align-items: center;
             justify-content: space-between;
             padding: 8px 16px;
@@ -133,7 +134,8 @@
             /* TODO Aufgabe 2: Menü Sidebar visuell von der Hauptseite abgrenzen */
             /* TODO Aufgabe 3: Navigation einklappbar machen*/
             display: block;
-            /* TODO Aufgabe 3: position: fixed; */
+            /* TODO Aufgabe 3: position: fixed*/
+            position: static;
             z-index: 10;
             top: 0;
             bottom: 0;
@@ -208,6 +210,8 @@
             padding: var(--cardPadding);
             color: var(--fontColor);
             display: flex;
+            /* TODO Aufgabe 3: Mit einklappbarer Sidebar nicht mehr notwendig: flex:1 */
+            flex: 1;
             flex-direction: column;
             gap: 1.5rem;
             height: auto;
@@ -468,7 +472,12 @@
         /* Tablet Layout */
         @media (min-width: 768px) {
             body {
-                flex-direction: row;
+                /* TODO Aufgabe 3: flex-direction: row für die sidebar */
+                flex-direction: column;
+            }
+            /* TODO Aufgabe 3: content kann bei einer einklappbaren Sidebar block sein */
+            content {
+                display: flex;
             }
 
             .sidebar {
@@ -590,11 +599,11 @@
     <content>
         <!-- TODO Aufgabe 3: logo "smart-clean-icon.svg" integrieren-->
         <div class="navbar">
+            <!-- TODO Aufgabe 3 toggleSidebar() und neue navbar Items integrieren-->
             <div class="navbar-left">
-                <div class="menu" onclick="toggleSidebar()">
+                <div class="menu">
                     <i class="fas fa-bars"></i>
                 </div>
-                <!-- TODO Aufgabe 3 -->
             </div>
 
             <div class="navbar-right">
@@ -603,7 +612,7 @@
         </div>
         <div id="sidebar" class="sidebar">
             <!-- TODO Aufgabe 3: toggleSidebar() fährt die sidebar ein/aus mithilfe der Property left -->
-            <button class="menu-x-btn"><i class="fas fa-x"></i></button>
+            <!-- <button class="menu-x-btn" onclick="toggleSidebar()"><i class="fas fa-x"></i></button> -->
             <ul>
                 <!-- TODO Aufgabe 2/3: Menü klarer strukturieren-->
                 <!-- TODO Aufgabe 3: Inhalte als Icons in die navbar verschieben zB. fa-user -->
