@@ -1,0 +1,893 @@
+<!DOCTYPE html>
+<html lang="de">
+
+  <head>
+      <meta charset="UTF-8" />
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <title>Smart Clean Dashboard</title>
+      <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+      
+    <style>
+    
+        :root {
+        --primaryColor: #fdf0c6;
+        --secondaryColor: #ffd54b;
+        --fontColor: #4a3f1c;
+        --fontHoverColor: #060404;
+        --borderColor: #e0d8b0;
+        --cardPadding: 1.5rem;
+        --iconMargin: 10px;
+        --internalCardPadding: 2rem;
+        --cardBorderRadius: 20px;
+        --cardColor: #fffdf4;
+        --disabledColor: #dddddd;
+        --disabledSecondaryColor: #aaa;
+        --startColor: #c8f7c5;
+        --warningColor: #fff3cd;
+        --warningBorderColor: #ffeaa7;
+        --errorColor: #f8d7da;
+        --errorBorderColor: #f5c6cb;
+        --successColor: #d4edda;
+        --successBorderColor: #c3e6cb;
+        --cardShadow: 0 2px 8px rgba(0,0,0,0.1);
+    }
+
+    * {
+        box-sizing: border-box;
+    }
+
+    html, body {
+        height: 100%;
+        margin: 0;
+        padding: 0;
+        overflow-x: hidden;
+    }
+
+    body {
+        /* Schriftart geändert für bessere Lesbarkeit */
+        font-family: 'Arial', sans-serif;
+        background-color: var(--primaryColor);
+        display: flex;
+        flex-direction: column;
+        overflow: auto;
+        /* line-height: 1.5; */
+        font-size: large;
+        height: 100%;
+        width: 100%;
+    }
+
+    body.no-scroll {
+        overflow: hidden;
+        height: 100dvh;
+    }
+
+    content {
+        display: block;
+        width: 100%;
+        height: 100%;
+    }
+
+    a { 
+        cursor: pointer;  
+        text-decoration: none;
+    }
+
+    .fas {
+        color: var(--fontColor);
+        background-color: unset;
+        display: flex;
+        align-content: center;
+        justify-content: center;
+    }
+    /* .fas:hover {
+        color: var(--fontHoverColor);
+        background-color: unset;
+    } */
+
+    /* NAVBAR */
+    .navbar {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 8px 16px;
+        background-color: var(--cardColor);
+        border: 1px solid var(--borderColor);
+        border-bottom-left-radius: var( --cardBorderRadius);
+        border-bottom-right-radius: var( --cardBorderRadius);
+    }
+
+    .navbar-left,
+    .navbar-right {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+    }
+
+    .navbar .logo {
+        display: flex;
+        align-items: center;
+        font-size: 18px;
+        font-weight: bold;
+    }
+    .navbar .logo img {
+        width: 28px;
+        height: 28px;
+        margin-right: 8px;
+    }
+
+    .navbar .search {
+        flex: 1;
+        max-width: 200px;
+        border: 1px solid var(--borderColor);
+        border-radius: var( --cardBorderRadius);
+        margin: 0 16px;
+    }
+    .navbar .search input {
+        width: 100%;
+        padding: 6px var(--iconMargin);
+        border-radius: 20px;
+        border: none;
+        outline: none;
+    }
+
+    .navbar .account img {
+        width: 28px;
+        height: 28px;
+        border-radius: 50%;
+        cursor: pointer;
+    }
+
+    /* SIDEBAR */
+    .sidebar {
+        /* TODO Aufgabe 2: Menü Sidebar visuell von der Hauptseite abgrenzen */
+        display: block;
+        position: fixed;
+        z-index: 10;
+        top: 0;
+        bottom: 0;
+        left: -1000px;
+        width: 100%;
+        background-color: var(--cardColor);
+        border-bottom: 2px solid var(--borderColor);
+        border-bottom-right-radius: var( --cardBorderRadius);
+        border-top-right-radius: var( --cardBorderRadius);
+        border-right: 1px solid var(--borderColor);
+        transition: 0.1s ease-in;
+        /* TODO Aufgabe 3: Navigation einklappbar machen, Account + Suche evtl. in Topbar verschieben */
+    }
+    .sidebar ul {
+
+        display: block;
+        list-style: none;
+        margin: 0;
+        padding: 40px var(--cardPadding) var(--cardPadding) 0;
+    }
+    .sidebar li {
+        margin: 0;
+        font-weight: 500;
+        border-color: var(--fontColor);
+        transition: all 0.2s ease;
+    }
+    .sidebar a {
+        display: block;
+        padding: 0.75rem 1rem;
+        background-color: var(--primaryColor);
+        border: 1px solid var(--borderColor);
+        color: var(--fontColor);
+        text-decoration: none;
+        border-bottom-right-radius: var( --cardBorderRadius);
+        border-top-right-radius: var( --cardBorderRadius);
+        text-align: center;
+        transition: all 0.2s ease;
+    }
+    .sidebar a:hover {
+        background-color: var(--borderColor);
+        color: var(--fontHoverColor);
+    }
+    .nav-item--current {
+        /* TODO Aufgabe 2: Aktuell besuchte Seite visuell hervorheben */
+        /* Die Routing Funktionalität & das setzen der nav-item--current Klasse müssen nicht umgesetzt werden */
+        background-color: var(--secondaryColor) !important;
+        border-color: var(--fontColor);
+        font-weight: 600;
+    }
+    .nav-item--current:hover {
+        background-color: var(--fontColor) !important;
+        color: var(--primaryColor) !important;
+    }
+    .menu-x-btn {
+        position: absolute;
+        top: 0; right: 0;
+        border: none;
+        padding: var(--iconMargin);
+        background-color: white;
+    }
+
+    /* MAIN */
+    .main {
+        overflow: auto;
+        padding: var(--cardPadding);
+        color: var(--fontColor);
+        display: flex;
+        flex-direction: column;
+        gap: 1.5rem;
+        height: auto;
+    }
+    .main-header {
+        display: flex;
+        font-size: 1.75rem;
+        margin: 0 0 1rem 0;
+        font-weight: 700;
+    }
+
+    .logo-icon {
+        margin-right: var(--iconMargin);
+        width: 40px;
+        margin-top: -10px;
+        justify-self: center;
+    }
+
+    .grid-container {
+        display: grid;
+        gap: 1.5rem;
+        grid-template-columns: 1fr;
+    }
+
+    .section {
+        /* TODO Aufgabe 2: Komponenten visuell abgrenzen */
+        background-color: var(--cardColor);
+        border-radius: var(--cardBorderRadius);
+        padding: var(--internalCardPadding);
+        box-shadow: var(--cardShadow);
+        border: 1px solid var(--borderColor);
+    }
+    .section h2 {
+        margin: 0 0 1.5rem 0;
+        color: var(--fontColor);
+    }
+
+    #active-count {
+        font-size: 3.5rem;
+    }
+
+    .active-item {
+        display: grid;
+        justify-items: center;
+        align-items: center;
+        font-size: 2.5rem;
+    }
+
+    /* DEVICES */
+    .device-container { 
+        width: 100%; 
+        display: flex;
+        flex-direction: column;
+        gap: 0.75rem;
+    }
+    .device {
+        display: grid;
+        gap: 0.25rem;
+        grid-template-columns: 40% 30% 20% 10%;
+        width: 100%;
+        padding: 0.5rem;
+        background-color: var(--primaryColor);
+        border-radius: var( --cardBorderRadius);
+        border: 1px solid var(--borderColor);
+        transition: all 0.2s ease;
+        position: relative;
+    }
+    .device:hover { box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
+
+    /* TODO Aufgabe 5: Status der Geräte visuell hervorheben (z.B. Punkte) */
+    .device[data-status="running"] {
+        background-color: var(--startColor);
+    }
+    
+    .device[data-status="error"] {
+        background-color: var(--errorColor);
+        border-color: var(--errorBorderColor);
+    }
+
+    .device::before {
+        content: '';
+        position: absolute;
+        left: 8px; 
+        top: 50%;
+        transform: translateY(-50%);
+        width: 8px; 
+        height: 8px;
+        border-radius: 50%;
+        background-color: var(--secondaryColor);
+    }
+    .device[data-status="running"]::before {
+        background-color: #28a745; /* Grün für aktiv */
+        animation: pulse 2s infinite;
+    }
+    .device[data-status="error"]::before {
+        background-color: #dc3545; /* Rot für Fehler */
+        animation: pulse 1s infinite;
+    }
+    @keyframes pulse {
+        0% { opacity: 1; }
+        50% { opacity: 0.5; }
+        100% { opacity: 1; }
+    }
+
+    .device-name {
+        font-weight: 600;
+        margin-left: var(--iconMargin);
+        order: -1;
+        text-wrap: balance;
+        margin-bottom: auto;
+        align-content: center;
+    }
+
+    .device-name .fas {
+        margin-right: var(--iconMargin);
+    }
+    .device-actions { 
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 0.5rem;
+        width: 100%;
+    }
+    .device-battery {
+        margin-bottom: auto;
+        align-content: center;
+        justify-content: end;
+    }
+
+    .device-battery .fas {
+        margin-left: 5px;
+    }
+
+    .device {
+        flex-direction: row;
+        justify-content: space-between;
+        text-align: left;
+        padding: 0.75rem 1rem;
+    }
+    .device-name, .device-battery { 
+        display: flex;
+        flex-wrap: wrap;
+        flex: 1;
+        margin-top: auto;
+        font-size: 1rem;
+        align-content: center;
+    }
+
+    .device-actions { 
+        justify-content: start;
+     }
+
+     .device .more-info {
+        margin-right: var(--iconMargin);
+     }
+
+    /* BUTTONS */
+    .toggle-btn {
+        padding: 0.5rem 1rem;
+        font-size: 1rem;
+        border: 1px solid var(--borderColor);
+        border-radius: 6px;
+        cursor: pointer;
+        transition: all 0.2s ease;
+        font-family: inherit;
+    }
+    .toggle-btn:hover:not(.disabled) {
+        transform: translateY(-1px);
+        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+
+    .issue {
+        background-color: var(--errorBorderColor);
+        border-color: var(--errorBorderColor);
+    }
+
+    /* ICONS */
+    .icons {
+        margin-top: 1rem;
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        align-content: center;
+        gap: 1rem;
+    }
+    .icons div {
+        display: grid;
+        justify-items: center;
+        align-items: center;
+        font-size: 2.5rem;
+        font-weight: 600;
+        padding: 1rem;
+    }
+
+    .more-info {
+        margin-top: var(--iconMargin);
+        display: flex;
+        justify-content: end;
+    }
+
+    .more-info--devices {
+        justify-content: center;
+    }
+
+    /* POPUPS */
+    .popup-overlay {
+        display: none;
+        position: fixed;
+        inset: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0,0,0,0.5);
+        justify-content: center;
+        align-items: center;
+        z-index: 1000;
+        padding: 1rem;
+    }
+    .popup-box {
+        background: var(--cardColor);
+        padding: 1.5rem;
+        border-radius: 12px;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+        border: 1px solid var(--borderColor);
+        min-width: auto;
+        margin: 1rem;
+    }
+    .popup-box h2 {
+        margin: 0 0 1rem 0;
+        color: var(--fontColor);
+    }
+    .popup-box p {
+        margin: 0 0 1rem 0;
+        line-height: 1.6;
+    }
+    .close-btn { 
+        float: inline-end;
+        cursor: pointer;
+        background-color: unset;
+        border: unset;
+        padding: 0 var(--iconMargin);
+        font-family: inherit;
+        font-size: 1rem;
+    }
+
+    .popup-headline-icon {
+      display: inline;  
+    }
+
+    .stuck-popup {
+    background-color: var(--errorColor);
+    border-color: var(--errorBorderColor)
+    }
+    .empty-battery-popup {
+    background-color: var(--warningColor);
+    border-color: var(--warningBorderColor);
+    }
+
+    /* ROOMS */
+    .room-help-icon { float: right; }
+    .rooms { height: fit-content; }
+    .rooms img {
+        width: 100%;
+        max-width: 300px;
+        display: block;
+        margin: 0 auto;
+    }
+    .plan p {
+        background-color: var(--primaryColor);
+        padding: 1rem;
+        border-radius: var( --cardBorderRadius);
+        border: 1px solid var(--borderColor);
+        margin: 0;
+    }
+
+    /* Tablet Layout */
+    @media (min-width: 768px) {
+        body { flex-direction: row; }
+
+        .sidebar {
+            width: 180px;
+            /* TODO Aufgabe 2: Menü Sidebar visuell von der Hauptseite abgrenzen */
+        }
+        .sidebar ul {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+        .sidebar a {
+            text-align: left;
+            font-size: 1rem;
+        }
+
+        .logo-icon {
+        width: 60px;
+        }
+
+        .navbar .search { margin-left: 150px; }
+
+        .main-header {
+            text-align: left;
+            font-size: 2.5rem;
+        }
+
+        .main-header > .fas {
+            margin-right: var(--iconMargin);
+        }
+
+        .grid-container {
+            grid-template-columns: repeat(2, 1fr);
+        }
+
+        #active-count {
+            font-size: 3rem;
+        }
+
+        .icons div { 
+            font-size: 2.5rem;
+            font-weight: 600;
+         }
+        .section h2 { font-size: 2rem; }
+        .section.devices { grid-column: span 2; }
+    }
+
+    /* Desktop Layout */
+    @media (min-width: 1024px) {
+        .grid-container {
+            grid-template-columns: repeat(3, 1fr);
+            grid-template-areas:
+                "active plan rooms"
+                "devices devices rooms";
+        }
+        
+        .section.active { grid-area: active; }
+        .section.plan { grid-area: plan; }
+        .section.devices { grid-area: devices; }
+        .section.rooms { grid-area: rooms; }
+
+    }
+
+    /* Zusätzliche mobile Anpassungen für sehr kleine Bildschirme */
+    @media (max-width: 480px) {
+        :root {
+            --cardPadding: 1rem;
+            --internalCardPadding: 1.5rem;
+        }
+
+        body {
+            font-size: medium;
+        }
+
+        h2 {
+            font-size: large;
+        }
+        .main-header { font-size: 1.75rem; }
+        .sidebar ul {
+            grid-template-columns: repeat(2, 1fr);
+            gap: 0.25rem;
+        }
+        .sidebar a {
+            font-size: 0.85rem;
+            padding: 0.6rem 0.5rem;
+        }
+        .device-name, .device-battery {
+            font-size: 0.8rem;
+        }
+    }
+
+    </style>
+  </head>
+
+  <body>
+    <content>
+      <div class="navbar">
+        <div class="navbar-left">
+            <div class="menu"  onclick="toggleSidebar()">
+                <i class="fas fa-bars"></i>
+            </div>
+            <a class="logo" href="#">
+                <img class="logo-icon" src="smart-clean-icon.svg">
+            </a>
+            <div class="search">
+                <input type="text" placeholder="Suchen...">
+            </div>
+        </div>
+        
+        <div class="navbar-right">
+          <div class="help">
+            <a href="#"><i class="fas fa-question"></i></a>
+          </div>
+          <div class="account">
+            <a href="#"><i class="fas fa-user"></i></a>
+          </div>
+        </div>
+      </div>
+      <div id="sidebar" class="sidebar">
+        <button class="menu-x-btn" onclick="toggleSidebar()"><i class="fas fa-x"></i></button>
+          <ul>
+              <!-- TODO Aufgabe 2/3: Menü klarer strukturieren-->
+              <!-- TODO Aufgabe 3: Navigation einklappbar machen, und Inhalte ggf. in die navbar verschieben -->
+              <li><a href="#" class="nav-item nav-item--current">Übersicht</a></li>
+              <li><a href="#" class="nav-item">Geräte</a></li>
+              <li><a href="#" class="nav-item">Räume</a></li>
+              <li><a href="#" class="nav-item">Pläne</a></li>
+              <li><a href="#" class="nav-item">Statistiken</a></li>
+              <li><a href="#" class="nav-item">Einstellungen</a></li>
+          </ul>
+      </div>
+
+      <div class="main">
+          <h1 class="main-header"><img class="logo-icon" src="smart-clean-icon.svg"> Smart Clean Übersicht</h1>
+
+          <div class="grid-container">
+              <!-- TODO Aufgabe 1: Prüfen ob die Reihenfolge der Komponenten sinnvoll ist -->
+              <!-- Wichtigste Komponenten zuerst: Aktive Geräte, dann alle Geräte, dann Zusatzinfos -->
+
+              <div class="section active">
+                  <h2>Aktive Geräte</h2>
+                  <div class="icons">
+                    <div id="active-count">0</div>
+                    
+                      <div onclick="pauseAllDevices()" title="Alle laufenden Geräte pausieren">
+                          <i class="fas fa-pause"></i>
+                      </div>
+                      <div onclick="deactivateAllDevices()" title="Alle Geräte stoppen">
+                          <i class="fas fa-stop"></i>
+                      </div>
+                  </div>
+              </div>
+
+              <div class="section plan">
+                  <h2>Nächste Reinigung</h2>
+                  <p>
+                      <strong>Fensterreinigung Küche</strong><br>
+                      Geplant für heute, 15:30 Uhr
+                  </p>
+                  <a href="#" class="more-info"><i class="fas fa-arrow-right"></i></a>
+              </div>
+
+              <div class="section rooms">
+                <div class="room-help-icon"><a><i class="fas fa-question"></i></a></div>
+                  <h2>Räume</h2>
+                  <img src="assets/Raumaufteilung.png" alt="Grundriss der Wohnung mit Raumaufteilung" />
+                  <a href="#" class="more-info"><i class="fas fa-arrow-right"></i></a>
+              </div>
+
+              <div class="section devices">
+                  <h2>Alle Reinigungsgeräte</h2>
+                  <div id="device-list" class="device-container">
+                      <!-- TODO Aufgabe 5: Status der Geräte visuell hervorheben (z.B. Punkte) -->
+                      <div class="device" data-device data-device-id="vacuumer1" data-status="running">
+                          <div class="device-name">Staubi</div>
+                          <div class="device-actions">
+                              <button class="toggle-btn stop"><i class="fas fa-stop"></i></button>
+                              <button class="toggle-btn pause-btn" style="display: flex;"><i class="fas fa-pause"></i></button>
+                          </div>
+                          <div class="device-battery">49% <i class="fas fa-battery-half"></i></div>
+                          <div class="more-info"><a href="#" title="Details anzeigen"><i class="fas fa-arrow-right"></i></a></div>
+                      </div>
+                      
+                      <div class="device" data-device data-device-id="windowcleaner1" data-status="stopped">
+                          <div class="device-name">Fensterli</div>
+                          <div class="device-actions">
+                              <button class="toggle-btn start"><i class="fas fa-play"></i></button>
+                              <button class="toggle-btn pause-btn" style="display: none;"><i class="fas fa-pause"></i></button>
+                          </div>
+                          <div class="device-battery">100% <i class="fas fa-battery-full"></i></div>
+                          <div class="more-info"><a href="#" title="Details anzeigen"><i class="fas fa-arrow-right"></i></a></div>
+                      </div>
+                      
+                      <!-- TODO Aufgabe 1/4: Fehlermeldungen prüfen, formulieren und hervorheben -->
+                      <div class="device" data-device data-device-id="balconycleaner1" data-status="error" onclick="openPopup('device-stuck-popup')">
+                          <div class="device-name"><i class="fas fa-exclamation-circle"></i> Balkonreiniger</div>
+                          <div class="device-actions">
+                              <button class="toggle-btn start issue disabled"><i class="fas fa-play"></i></button>
+                              <button class="toggle-btn pause-btn" style="display: none;"><i class="fas fa-pause"></i></button>
+                          </div>
+                          <div class="device-battery">97% <i class="fas fa-battery-full"></i></div>
+                          <div class="more-info"><a href="#" title="Problem lösen"><i class="fas fa-arrow-right"></i></a></div>
+                      </div>
+                      <!-- TODO Aufgabe 1/4: Fehlermeldungen prüfen, formulieren und hervorheben -->
+                      <div class="device" data-device data-device-id="vacuumer2" data-status="error">
+                          <div class="device-name"><i class="fas fa-exclamation-triangle"></i> Schlafzimmer-Staubi</div>
+                          <div class="device-actions">
+                              <button class="toggle-btn start issue" onclick="openPopup('empty-battery-popup')"><i class="fas fa-play"></i></button>
+                              <button class="toggle-btn pause-btn" style="display: none;"><i class="fas fa-pause"></i></button>
+                          </div>
+                          <div class="device-battery">0% <i class="fas fa-battery-empty"></i></div>
+                          <div class="more-info"><a href="#" title="Problem lösen"><i class="fas fa-arrow-right"></i></a></div>
+                      </div>
+                      
+                      <div class="device" data-device data-device-id="bathroomcleaner1" data-status="stopped">
+                          <div class="device-name">Badezimmeri</div>
+                          <div class="device-actions">
+                              <button class="toggle-btn start"><i class="fas fa-play"></i></button>
+                              <button class="toggle-btn pause-btn" style="display: none;"><i class="fas fa-pause"></i></button>
+                          </div>
+                          <div class="device-battery">100% <i class="fas fa-battery-full"></i></div>
+                          <div class="more-info"><a href="#" title="Verbindung prüfen"><i class="fas fa-arrow-right"></i></a></div>
+                      </div>
+                      
+                      <div class="device" data-device data-device-id="windowcleaner2" data-status="stopped">
+                          <div class="device-name">Fensterputzeri</div>
+                          <div class="device-actions">
+                              <button class="toggle-btn start"><i class="fas fa-play"></i></button>
+                              <button class="toggle-btn pause-btn" style="display: none;"><i class="fas fa-pause"></i></button>
+                          </div>
+                          <div class="device-battery">100% <i class="fas fa-battery-full"></i></div>
+                          <div class="more-info"><a href="#" title="Details anzeigen"><i class="fas fa-arrow-right"></i></a></div>
+                      </div>
+                  </div>
+                  <div class="more-info more-info--devices"><a href="#" title="Section-Details anzeigen"><i class="fas fa-arrow-down"></i></a></div>
+              </div>
+          </div>
+
+          <!-- Pop Ups -->
+          <div class="popup-overlay" id="empty-battery-popup">
+            <!-- TODO Aufgabe 1/4: Formulierung und Verständlichkeit prüfen -->
+              <div class="popup-box empty-battery-popup">
+                <button class="close-btn" onclick="closePopup('empty-battery-popup')"><i class="fas fa-x"></i></button>
+                <h2><i class="popup-headline-icon fas fa-exclamation-triangle"></i> Upsi!</h2>
+                <p>Dein Gerät <em>Balkonli1</em> ist leider leer.</p>
+                <p>Bitte schließe es an ein Ladekabel, damit es für dich putzen kann! :)</p>
+              </div>
+          </div>
+
+          <div class="popup-overlay" id="device-stuck-popup">
+            <!-- TODO Aufgabe 1/4: Formulierung und Verständlichkeit prüfen -->
+              <div class="popup-box stuck-popup">
+                <button class="close-btn" onclick="closePopup('device-stuck-popup')"><i class="fas fa-x"></i></button>
+                  <h2><i class="popup-headline-icon fas fa-exclamation-circle"></i> Oh nein!</h2>
+                  <p>Dein Gerät <em>Balkonli1</em> steckt fest.</p>
+                  <p>Geh es ganz schnell befreien!</p>
+                  </div>
+          </div>
+      </div>
+    </content>
+
+    <script>
+        // Das Javascript muss im Rahmen der Aufgabenserie nicht modifiziert werden
+
+        function getDeviceStatus(id) {
+                const deviceEl = document.querySelector(`[data-device-id="${id}"]`);
+                return deviceEl ? deviceEl.dataset.status : 'stopped';
+            }
+
+            function setDeviceStatus(id, newStatus) {
+                const deviceEl = document.querySelector(`[data-device-id="${id}"]`);
+                if (deviceEl) {
+                    deviceEl.dataset.status = newStatus;
+                    updateUI();
+                }
+            }
+
+            function updateUI() {
+                // Alle Geräte durchgehen und UI basierend auf data-status aktualisieren
+                document.querySelectorAll('.device').forEach(deviceEl => {
+                    const status = deviceEl.dataset.status;
+                    const startStopBtn = deviceEl.querySelector('.toggle-btn:not(.pause-btn)');
+                    const pauseBtn = deviceEl.querySelector('.pause-btn');
+
+                    switch (status) {
+                        case 'running':
+                            startStopBtn.innerHTML = '<i class="fas fa-stop"></i>';
+                            startStopBtn.classList.add('stop');
+                            startStopBtn.classList.remove('start');
+                            pauseBtn.style.display = 'inline';
+                            break;
+                        case 'paused':
+                            startStopBtn.innerHTML = '<i class="fas fa-play"></i>';
+                            startStopBtn.classList.add('start');
+                            startStopBtn.classList.remove('stop');
+                            pauseBtn.style.display = 'none';
+                            break;
+                        case 'error':
+                            // Error devices bleiben wie sie sind
+                            pauseBtn.style.display = 'none';
+                            break;
+                        case 'stopped':
+                        default:
+                            startStopBtn.innerHTML = '<i class="fas fa-play"></i>';
+                            startStopBtn.classList.add('start');
+                            startStopBtn.classList.remove('stop');
+                            pauseBtn.style.display = 'none';
+                            break;
+                    }
+                });
+
+                // Aktive Geräte zählen (nur running status)
+                const activeCount = document.querySelectorAll('[data-status="running"]').length;
+                document.getElementById("active-count").textContent = activeCount;
+            }
+
+            function toggleSidebar() {
+              htmlEl = document.getElementById('sidebar');
+              if(htmlEl && htmlEl.style.left == '0px') {
+                htmlEl.style.left = '-1000px';
+              } else {
+                htmlEl.style.left = '0px';
+              }
+            }
+
+            function openPopup(id) {
+                document.getElementById(id).style.display = 'flex';
+            }
+
+            function closePopup(id) {
+                document.getElementById(id).style.display = 'none';
+            }
+
+            function startAllDevices() {
+                document.querySelectorAll('.device').forEach(deviceEl => {
+                    const startStopBtn = deviceEl.querySelector('.toggle-btn:not(.pause-btn)');
+                    // Nur starten wenn nicht disabled oder error
+                    if (!startStopBtn.classList.contains('disabled') && 
+                        !startStopBtn.classList.contains('issue') && 
+                        deviceEl.dataset.status !== 'error') {
+                        deviceEl.dataset.status = 'running';
+                    }
+                });
+                updateUI();
+            }
+
+            function deactivateAllDevices() {
+                document.querySelectorAll('.device').forEach(deviceEl => {
+                    // Error devices bleiben error, andere werden stopped
+                    if (deviceEl.dataset.status !== 'error') {
+                        deviceEl.dataset.status = 'stopped';
+                    }
+                });
+                updateUI();
+            }
+
+            function pauseAllDevices() {
+                document.querySelectorAll('.device').forEach(deviceEl => {
+                    // Nur running devices pausieren
+                    if (deviceEl.dataset.status === 'running') {
+                        deviceEl.dataset.status = 'paused';
+                    }
+                });
+                updateUI();
+            }
+
+            // Event Listener für alle Geräte
+            document.querySelectorAll('.device').forEach(deviceEl => {
+                const startStopBtn = deviceEl.querySelector('.toggle-btn:not(.pause-btn)');
+                const pauseBtn = deviceEl.querySelector('.pause-btn');
+                const id = deviceEl.dataset.deviceId;
+
+                if (startStopBtn && !startStopBtn.classList.contains('disabled')) {
+                    startStopBtn.addEventListener('click', (e) => {
+                        // Error devices ignorieren
+                        if (deviceEl.dataset.status === 'error') {
+                            return;
+                        }
+
+                        // Status basierend auf aktuellen data-status wechseln
+                        const currentStatus = deviceEl.dataset.status;
+                        if (currentStatus === 'running') {
+                            deviceEl.dataset.status = 'stopped';
+                        } else {
+                            deviceEl.dataset.status = 'running';
+                        }
+                        updateUI();
+                    });
+                }
+
+                if (pauseBtn) {
+                    pauseBtn.addEventListener('click', () => {
+                        if (deviceEl.dataset.status === 'running') {
+                            deviceEl.dataset.status = 'paused';
+                            updateUI();
+                        }
+                    });
+                }
+            });
+
+            // UI beim Laden initialisieren
+            updateUI();
+        </script>
+    </body>
+
+</html>
