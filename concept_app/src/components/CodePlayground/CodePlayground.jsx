@@ -22,7 +22,7 @@ const CodePlayground = () => {
 
   const handleLoadTask = async () => {
     try {
-      const response = await fetch('/hci-app.html');
+      const response = await fetch('/hci-app-first-exercise.html');
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`);
       }
