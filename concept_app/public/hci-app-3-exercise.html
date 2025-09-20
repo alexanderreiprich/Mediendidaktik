@@ -37,6 +37,7 @@
 
         html,
         body {
+             /* TODO Aufgabe 1:  overscrolling fixen*/
             height: 100%;
             margin: 0;
             padding: 0;
@@ -53,11 +54,6 @@
             font-size: large;
             height: 100%;
             width: 100%;
-        }
-
-        body.no-scroll {
-            overflow: hidden;
-            height: 100dvh;
         }
 
         content {
@@ -177,6 +173,8 @@
             transition: all 0.2s ease;
         }
 
+         /* TODO Aufgabe 2: Items der sidebar voneinander abgrenzen, zB. mit der Klasse nav-item */
+
         .sidebar a:hover {
             background-color: var(--borderColor);
             color: var(--fontHoverColor);
@@ -225,6 +223,7 @@
         }
 
         .grid-container {
+            /* TODO Aufgabe 1: grid-container für responsives Layout (Alternative Layouts können natürlich auch umgesetzt werden) */
             display: grid;
             gap: 1.5rem;
             grid-template-columns: 1fr;
@@ -264,6 +263,7 @@
         }
 
         .device {
+             /* TODO Aufgabe 1: Responsivität für kleine Bildschirme überprüfen*/
             display: grid;
             gap: 0.25rem;
             grid-template-columns: 40% 30% 20% 10%;
@@ -633,7 +633,6 @@
 
             <div class="grid-container">
                 <!-- TODO Aufgabe 1: Prüfen ob die Reihenfolge der Komponenten sinnvoll ist -->
-                <!-- Wichtigste Komponenten zuerst: Aktive Geräte, dann alle Geräte, dann Zusatzinfos -->
 
                 <div class="section active">
                     <h2>Aktive Geräte</h2>
@@ -755,7 +754,7 @@
                 <div class="popup-box empty-battery-popup">
                     <button class="close-btn" onclick="closePopup('empty-battery-popup')"><i
                             class="fas fa-x"></i></button>
-                    <h2>Upsi!</h2>
+                    <h2>Warnung!</h2>
                     <p>Gerät <em>Schlafzimmer-Staubi</em> hat einen leeren Akku.</p>
                     <p>Es muss an eine Ladestelle gebracht werden.</p>
                 </div>
@@ -766,7 +765,7 @@
                 <div class="popup-box stuck-popup">
                     <button class="close-btn" onclick="closePopup('device-stuck-popup')"><i
                             class="fas fa-x"></i></button>
-                    <h2>Gerät blockiert</h2>
+                    <h2>Error!</h2>
                     <p>Das Gerät <em>Balkonreiniger</em> wird blockiert. Bitte überprüfen Sie den Zustand des Geräts.</p>
                 </div>
             </div>
