@@ -16,6 +16,7 @@
         --fontHoverColor: #060404;
         --borderColor: #e0d8b0;
         --cardPadding: 1.5rem;
+        --iconMargin: 10px;
         --internalCardPadding: 2rem;
         --cardBorderRadius: 20px;
         --cardColor: #fffdf4;
@@ -123,7 +124,7 @@
     }
     .navbar .search input {
         width: 100%;
-        padding: 6px 10px;
+        padding: 6px var(--iconMargin);
         border-radius: 20px;
         border: none;
         outline: none;
@@ -198,7 +199,7 @@
         position: absolute;
         top: 0; right: 0;
         border: none;
-        padding: 10px;
+        padding: var(--iconMargin);
         background-color: white;
     }
 
@@ -220,7 +221,7 @@
     }
 
     .logo-icon {
-        margin-right: 10px;
+        margin-right: var(--iconMargin);
         width: 40px;
         margin-top: -10px;
         justify-self: center;
@@ -314,7 +315,7 @@
 
     .device-name {
         font-weight: 600;
-        margin-left: 10px;
+        margin-left: var(--iconMargin);
         order: -1;
         text-wrap: balance;
         margin-bottom: auto;
@@ -322,7 +323,7 @@
     }
 
     .device-name .fas {
-        margin-right: 10px;
+        margin-right: var(--iconMargin);
     }
     .device-actions { 
         display: flex;
@@ -361,7 +362,7 @@
      }
 
      .device .more-info {
-        margin-right: 10px;
+        margin-right: var(--iconMargin);
      }
 
     /* BUTTONS */
@@ -403,7 +404,7 @@
     }
 
     .more-info {
-        margin-top: 10px;
+        margin-top: var(--iconMargin);
         display: flex;
         justify-content: end;
     }
@@ -447,7 +448,7 @@
         cursor: pointer;
         background-color: unset;
         border: unset;
-        padding: 0 10px;
+        padding: 0 var(--iconMargin);
         font-family: inherit;
         font-size: 1rem;
     }
@@ -512,7 +513,7 @@
         }
 
         .main-header > .fas {
-            margin-right: 10px;
+            margin-right: var(--iconMargin);
         }
 
         .grid-container {
@@ -606,15 +607,13 @@
         <button class="menu-x-btn" onclick="toggleSidebar()"><i class="fas fa-x"></i></button>
           <ul>
               <!-- TODO Aufgabe 2/3: Menü klarer strukturieren-->
-              <!-- TODO Aufgabe 3: Navigation einklappbar machen, Account + Suche evtl. in Topbar verschieben -->
+              <!-- TODO Aufgabe 3: Navigation einklappbar machen, und Inhalte ggf. in die navbar verschieben -->
               <li><a href="#" class="nav-item nav-item--current">Übersicht</a></li>
               <li><a href="#" class="nav-item">Geräte</a></li>
               <li><a href="#" class="nav-item">Räume</a></li>
               <li><a href="#" class="nav-item">Pläne</a></li>
               <li><a href="#" class="nav-item">Statistiken</a></li>
               <li><a href="#" class="nav-item">Einstellungen</a></li>
-              <li><a href="#" class="nav-item">Suche</a></li>
-              <li><a href="#" class="nav-item">Account</a></li>
           </ul>
       </div>
 
