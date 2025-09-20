@@ -80,10 +80,12 @@
             justify-content: center;
         }
 
-        /* .fas:hover {
-        color: var(--fontHoverColor);
-        background-color: unset;
-    } */
+        .more-info:hover,  .fa-question:hover, .navbar .fas:hover, .navbar .logo-icon:hover, .active .fas:hover {
+            cursor: pointer;
+            color: var(--fontHoverColor);
+            transform: translateY(-1px);
+        }
+
 
         /* NAVBAR */
         .navbar {
@@ -397,6 +399,10 @@
 
         .device .more-info {
             margin-right: var(--iconMargin);
+        }
+
+        .more-info:hover,  .fa-question:hover, .fa-user:hover {
+            transform: translateY(-1px);
         }
 
         /* BUTTONS */
