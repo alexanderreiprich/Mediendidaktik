@@ -44,13 +44,12 @@
         }
 
         body {
-            /* Schriftart geändert für bessere Lesbarkeit */
+            /* TODO Aufgabe 1: Schriftart ändern für bessere Lesbarkeit */
             font-family: 'Arial', sans-serif;
             background-color: var(--primaryColor);
             display: flex;
             flex-direction: column;
             overflow: auto;
-            /* line-height: 1.5; */
             font-size: large;
             height: 100%;
             width: 100%;
@@ -145,6 +144,7 @@
         /* SIDEBAR */
         .sidebar {
             /* TODO Aufgabe 2: Menü Sidebar visuell von der Hauptseite abgrenzen */
+            /* TODO Aufgabe 3: Navigation einklappbar machen*/
             display: block;
             position: fixed;
             z-index: 10;
@@ -158,7 +158,6 @@
             border-top-right-radius: var(--cardBorderRadius);
             border-right: 1px solid var(--borderColor);
             transition: 0.1s ease-in;
-            /* TODO Aufgabe 3: Navigation einklappbar machen, Account + Suche evtl. in Topbar verschieben */
         }
 
         .sidebar ul {
@@ -664,6 +663,7 @@
 
 <body>
     <content>
+        <!-- TODO Aufgabe 3: logo "smart-clean-icon.svg" integrieren-->
         <div class="navbar">
             <div class="navbar-left">
                 <div class="menu" onclick="toggleSidebar()">
@@ -672,12 +672,14 @@
                 <a class="logo" href="#">
                     <img class="logo-icon" src="smart-clean-icon.svg">
                 </a>
+                <!-- TODO Aufgabe 3 -->
                 <div class="search">
                     <input type="text" placeholder="Suchen...">
                 </div>
             </div>
 
             <div class="navbar-right">
+                <!-- TODO Aufgabe 3/4 -->
                 <div class="help">
                     <a href="#"><i class="fas fa-question"></i></a>
                 </div>
@@ -690,12 +692,11 @@
             <button class="menu-x-btn" onclick="toggleSidebar()"><i class="fas fa-x"></i></button>
             <ul>
                 <!-- TODO Aufgabe 2/3: Menü klarer strukturieren-->
-                <!-- TODO Aufgabe 3: Navigation einklappbar machen, und Inhalte ggf. in die navbar verschieben -->
+                <!-- TODO Aufgabe 3: Navigation einklappbar machen, und Inhalte ggf. als Icons in die navbar verschieben zB. fa-user -->
                 <li><a href="#" class="nav-item nav-item--current">Übersicht</a></li>
                 <li><a href="#" class="nav-item">Geräte</a></li>
                 <li><a href="#" class="nav-item">Räume</a></li>
                 <li><a href="#" class="nav-item">Pläne</a></li>
-                <li><a href="#" class="nav-item">Statistiken</a></li>
                 <li><a href="#" class="nav-item">Einstellungen</a></li>
             </ul>
         </div>
@@ -765,7 +766,6 @@
                                         class="fas fa-arrow-right"></i></a></div>
                         </div>
 
-                        <!-- TODO Aufgabe 1/4: Fehlermeldungen prüfen, formulieren und hervorheben -->
                         <div class="device" data-device data-device-id="balconycleaner1" data-status="error"
                             onclick="openPopup('device-stuck-popup')">
                             <div class="device-name"><i class="fas fa-exclamation-circle"></i> Balkonreiniger</div>
@@ -778,7 +778,6 @@
                             <div class="more-info"><a href="#" title="Problem lösen"><i
                                         class="fas fa-arrow-right"></i></a></div>
                         </div>
-                        <!-- TODO Aufgabe 1/4: Fehlermeldungen prüfen, formulieren und hervorheben -->
                         <div class="device" data-device data-device-id="vacuumer2" data-status="error">
                             <div class="device-name"><i class="fas fa-exclamation-triangle"></i> Schlafzimmer-Staubi
                             </div>
@@ -824,7 +823,7 @@
 
             <!-- Pop Ups -->
             <div class="popup-overlay" id="empty-battery-popup">
-                <!-- TODO Aufgabe 1/4: Formulierung und Verständlichkeit prüfen -->
+                <!-- TODO Aufgabe 1/5: Formulierung und Verständlichkeit prüfen -->
                 <div class="popup-box empty-battery-popup">
                     <button class="close-btn" onclick="closePopup('empty-battery-popup')"><i
                             class="fas fa-x"></i></button>
@@ -835,12 +834,12 @@
             </div>
 
             <div class="popup-overlay" id="device-stuck-popup">
-                <!-- TODO Aufgabe 1/4: Formulierung und Verständlichkeit prüfen -->
+                <!-- TODO Aufgabe 1/5: Formulierung und Verständlichkeit prüfen -->
                 <div class="popup-box stuck-popup">
                     <button class="close-btn" onclick="closePopup('device-stuck-popup')"><i
                             class="fas fa-x"></i></button>
                     <h2><i class="popup-headline-icon fas fa-exclamation-circle"></i> Oh nein!</h2>
-                    <p>Dein Gerät <em>Balkonli1</em> steckt fest.</p>
+                    <p>Dein Gerät <em>Balkonreiniger</em> steckt fest.</p>
                     <p>Geh es ganz schnell befreien!</p>
                 </div>
             </div>

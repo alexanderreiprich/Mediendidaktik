@@ -79,7 +79,7 @@
             justify-content: center;
         }
 
-        .more-info:hover,  .fa-question:hover, .navbar .fas:hover, .navbar .logo-icon:hover, .active .fas:hover {
+        .more-info:hover,  .fa-question:hover, .navbar .fas:hover, .active .fas:hover {
             cursor: pointer;
             color: var(--fontHoverColor);
             transform: translateY(-1px);
@@ -103,19 +103,6 @@
             display: flex;
             align-items: center;
             gap: 12px;
-        }
-
-        .navbar .logo {
-            display: flex;
-            align-items: center;
-            font-size: 18px;
-            font-weight: bold;
-        }
-
-        .navbar .logo img {
-            width: 28px;
-            height: 28px;
-            margin-right: 8px;
         }
 
         .navbar .search {
@@ -146,18 +133,18 @@
             /* TODO Aufgabe 2: Menü Sidebar visuell von der Hauptseite abgrenzen */
             /* TODO Aufgabe 3: Navigation einklappbar machen*/
             display: block;
-            position: fixed;
+            /* TODO Aufgabe 3: position: fixed; */
             z-index: 10;
             top: 0;
             bottom: 0;
-            left: -1000px;
+            /*TODO Aufgabe 3: Mit  left: -1000px ist die Navbar außerhalb des Screens */
+            left: 0;
             width: 100%;
             background-color: var(--cardColor);
             border-bottom: 2px solid var(--borderColor);
             border-bottom-right-radius: var(--cardBorderRadius);
             border-top-right-radius: var(--cardBorderRadius);
             border-right: 1px solid var(--borderColor);
-            transition: 0.1s ease-in;
         }
 
         .sidebar ul {
@@ -233,13 +220,6 @@
             font-weight: 700;
         }
 
-        .logo-icon {
-            margin-right: var(--iconMargin);
-            width: 40px;
-            margin-top: -10px;
-            justify-self: center;
-        }
-
         .grid-container {
             display: grid;
             gap: 1.5rem;
@@ -300,8 +280,6 @@
 
         .device[data-status="error"] {
             /* TODO Aufgabe 4: Warnungen visuell hervorheben */
-            background-color: var(--errorColor);
-            border-color: var(--errorBorderColor);
         }
 
         .device-name {
@@ -311,10 +289,6 @@
             text-wrap: balance;
             margin-bottom: auto;
             align-content: center;
-        }
-
-        .device-name .fas {
-            margin-right: var(--iconMargin);
         }
 
         .device-actions {
@@ -378,11 +352,6 @@
         .toggle-btn:hover:not(.disabled) {
             transform: translateY(-1px);
             box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-        }
-
-        .issue {
-            background-color: var(--errorBorderColor);
-            border-color: var(--errorBorderColor);
         }
 
         /* ICONS */
@@ -518,10 +487,6 @@
                 font-size: 1rem;
             }
 
-            .logo-icon {
-                width: 60px;
-            }
-
             .navbar .search {
                 margin-left: 150px;
             }
@@ -629,41 +594,33 @@
                 <div class="menu" onclick="toggleSidebar()">
                     <i class="fas fa-bars"></i>
                 </div>
-                <a class="logo" href="#">
-                    <img class="logo-icon" src="smart-clean-icon.svg">
-                </a>
                 <!-- TODO Aufgabe 3 -->
-                <div class="search">
-                    <input type="text" placeholder="Suchen...">
-                </div>
             </div>
 
             <div class="navbar-right">
                 <!-- TODO Aufgabe 3/4 -->
-                <div class="help">
-                    <a href="#"><i class="fas fa-question"></i></a>
-                </div>
-                <div class="account">
-                    <a href="#"><i class="fas fa-user"></i></a>
-                </div>
             </div>
         </div>
         <div id="sidebar" class="sidebar">
             <!-- TODO Aufgabe 3: toggleSidebar() fährt die sidebar ein/aus mithilfe der Property left -->
-            <button class="menu-x-btn" onclick="toggleSidebar()"><i class="fas fa-x"></i></button>
+            <button class="menu-x-btn"><i class="fas fa-x"></i></button>
             <ul>
                 <!-- TODO Aufgabe 2/3: Menü klarer strukturieren-->
                 <!-- TODO Aufgabe 3: Inhalte als Icons in die navbar verschieben zB. fa-user -->
-                <li><a href="#" class="nav-item nav-item--current">Übersicht</a></li>
+                <li><a href="#" class="nav-item">Hilfe</a></li>
+                <li><a href="#" class="nav-item">Suche</a></li>
                 <li><a href="#" class="nav-item">Geräte</a></li>
+                <li><a href="#" class="nav-item">Einstellungen</a></li>
                 <li><a href="#" class="nav-item">Räume</a></li>
                 <li><a href="#" class="nav-item">Pläne</a></li>
-                <li><a href="#" class="nav-item">Einstellungen</a></li>
+                <li><a href="#" class="nav-item">Account</a></li> 
+                <li><a href="#" class="nav-item nav-item--current">Übersicht</a></li>
+                
             </ul>
         </div>
 
         <div class="main">
-            <h1 class="main-header"><img class="logo-icon" src="smart-clean-icon.svg"> Smart Clean Übersicht</h1>
+            <h1 class="main-header">Smart Clean Übersicht</h1>
 
             <div class="grid-container">
                 <!-- TODO Aufgabe 1: Prüfen ob die Reihenfolge der Komponenten sinnvoll ist -->
@@ -704,6 +661,7 @@
                     <div id="device-list" class="device-container">
                         <!-- TODO Aufgabe 5: Status der Geräte visuell hervorheben (z.B. Punkte) -->
                         <div class="device" data-device data-device-id="vacuumer1" data-status="running">
+                             <!-- TODO Aufgabe 4: Warnungen visuell hervorheben -->
                             <div class="device-name">Staubi</div>
                             <div class="device-actions">
                                 <button class="toggle-btn stop"><i class="fas fa-stop"></i></button>
@@ -730,7 +688,7 @@
                         <div class="device" data-device data-device-id="balconycleaner1" data-status="error"
                             onclick="openPopup('device-stuck-popup')">
                             <!-- TODO Aufgabe 4: Warnungen visuell hervorheben -->
-                            <div class="device-name"><i class="fas fa-exclamation-circle"></i> Balkonreiniger</div>
+                            <div class="device-name">Balkonreiniger</div>
                             <div class="device-actions">
                                 <button class="toggle-btn start issue disabled"><i class="fas fa-play"></i></button>
                                 <button class="toggle-btn pause-btn" style="display: none;"><i
@@ -741,9 +699,7 @@
                                         class="fas fa-arrow-right"></i></a></div>
                         </div>
                         <div class="device" data-device data-device-id="vacuumer2" data-status="error">
-                            <!-- TODO Aufgabe 4: Warnungen visuell hervorheben -->
-                            <div class="device-name"><i class="fas fa-exclamation-triangle"></i> Schlafzimmer-Staubi
-                            </div>
+                            <div class="device-name">Schlafzimmer-Staubi</div>
                             <div class="device-actions">
                                 <button class="toggle-btn start issue" onclick="openPopup('empty-battery-popup')"><i
                                         class="fas fa-play"></i></button>
