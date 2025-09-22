@@ -6,7 +6,9 @@
 - [ ] jwk secret in .env?
 - [ ] Was passiert, wenn der JWT abläuft?
 - [ ] Remove Cors
-- [ ] Aufgabe Laden Button nicht mehr sinnvoll?
+- [ ] Wenn man die App nicht über OPAL und damit LTI aufruft kann man trotzdem nutzen, aber beim speichern und laden gibts unauthorised
+- [ ] Assets calls nicht über absolute Route sondern irgendwie relativ machen, sodass nicht hci domain in den Musterlösungen drin steht
+- [ ] Alle hci Domains durch env ersetzen und in docker-compose.yml
 
 ## Next Steps
 
@@ -21,7 +23,11 @@
       - Ansonsten wird eigene Lösung zurückgegeben
     - POST
       - ```json
-        {"content":"CONTENT"}
+        {
+          "html": "HTML",
+          "css": "CSS",
+          "js": "JS"
+        }
         ```
   - `/api/task/:id/begin`
     - GET

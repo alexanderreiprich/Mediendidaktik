@@ -31,17 +31,17 @@ const CodePlayground = ({sample = false}) => {
       let url;
       if (sample) {
         // Sample-Modus: nächste Aufgabe laden
-        url = `http://localhost:3000/api/task/${parseInt(params.id) + 1}/begin`;
+        url = `https://hci-lti-lernapp.imn.htwk-leipzig.de/backend/api/task/${parseInt(params.id) + 1}/begin`;
       } else {
         // Normal-Modus: erst versuchen gespeicherten Inhalt zu laden
-        const resp = await fetch(`http://localhost:3000/api/task/${params.id}`, {
+        const resp = await fetch(`https://hci-lti-lernapp.imn.htwk-leipzig.de/backend/api/task/${params.id}`, {
           method: "GET",
           credentials: "include"
         });
 
         if (resp.status === 204) {
           // kein gespeicherter Inhalt → begin laden
-          url = `http://localhost:3000/api/task/${params.id}/begin`;
+          url = `https://hci-lti-lernapp.imn.htwk-leipzig.de/backend/api/task/${params.id}/begin`;
         } else {
           const data = await resp.json();
           handleCodeLoad(data.html, data.css, data.js);
@@ -74,7 +74,7 @@ const CodePlayground = ({sample = false}) => {
 
   async function saveTask(html, css, js) {
     try {
-      await fetch(`http://localhost:3000/api/task/${params.id}`, {
+      await fetch(`https://hci-lti-lernapp.imn.htwk-leipzig.de/backend/api/task/${params.id}`, {
         method: "POST",
         credentials: "include",
         headers: { "Content-Type": "application/json" },

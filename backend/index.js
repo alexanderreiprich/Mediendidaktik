@@ -159,13 +159,13 @@ app.get('/health', (req, res) => {
 
 // 🔐 JWT Middleware
 function authenticateJWT(req, res, next) {
-  // const token = req.cookies?.token;
-  // if (!token) return res.sendStatus(401);
-  // jwt.verify(token, process.env.JWT_SECRET, (err, user) => {
-  //   if (err) return res.sendStatus(403);
-  //   req.user = user;
+  const token = req.cookies?.token;
+  if (!token) return res.sendStatus(401);
+  jwt.verify(token, process.env.JWT_SECRET, (err, user) => {
+    if (err) return res.sendStatus(403);
+    req.user = user;
     next();
-  // });
+  });
 }
 
 // API Routen für Datei lesen/schreiben

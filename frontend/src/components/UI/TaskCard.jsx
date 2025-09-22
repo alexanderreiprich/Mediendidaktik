@@ -10,7 +10,7 @@ const TaskCard = ({ children, id = 1 }) => {
   // Prüfen ob eine Aufgabe bearbeitet wurde (Datei existiert)
   const checkTaskDone = async (taskId) => {
     try {
-      const resp = await fetch(`http://localhost:3000/api/task/${taskId}`, {
+      const resp = await fetch(`https://hci-lti-lernapp.imn.htwk-leipzig.de/backend/api/task/${taskId}`, {
         method: "GET",
         credentials: "include",
       });
