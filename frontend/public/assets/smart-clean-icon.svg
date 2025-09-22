@@ -1,0 +1,27 @@
+
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
+  <!-- 
+    SVG Icon of a simple house using a thick lineart style.
+    - Key elements: House shape, roof, door, and a chimney.
+    - Style: Minimalist, thick outline, no fill, and no windows as requested.
+    - Technique: Uses basic shapes (<rect> and <polyline>) grouped together.
+    - A single <g> element is used to apply styling consistently across all parts.
+    - stroke-linejoin="round" is used to create soft, friendly corners.
+    - The stroke-width is set to 6 for a bold, "thick lineart" appearance.
+  -->
+  <g fill="none" stroke="#000000" stroke-width="6" stroke-linecap="round" stroke-linejoin="round">
+    
+    <!-- Main body of the house -->
+    <rect x="20" y="55" width="60" height="35"/>
+    
+    <!-- Roof of the house, drawn as an open triangular shape -->
+    <polyline points="17,55 50,28 83,55"/>
+    
+    <!-- Chimney on the roof -->
+    <rect x="65" y="32" width="8" height="15"/>
+    
+    <!-- Doorway, drawn as an open rectangle (polyline) to represent an entrance -->
+    <polyline points="44,90 44,72 56,72 56,90"/>
+    
+  </g>
+</svg>
